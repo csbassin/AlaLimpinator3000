@@ -21,6 +21,10 @@ public class Main {
             System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail()+", ativo: "+morador.isAtivo());
             morador = mr.readNext();
             System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail()+", ativo: "+morador.isAtivo());
+            morador.setNome("Garibaldo");
+            mw.update(morador);
+            morador = mr.read(1);
+            System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail()+", ativo: "+morador.isAtivo());
             morador = mr.readNext();
             if(morador == null){
                 System.out.println("Não há mais moradores.");

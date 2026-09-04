@@ -4,7 +4,7 @@ import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
 
 public class Morador {
-    private int index;
+    private Integer index = null;
     private String nome;
     private String email;
     private boolean ativo;
@@ -22,7 +22,7 @@ public class Morador {
         this.ativo = ativo;
     }
 
-    public int getIndex() {
+    public Integer getIndex() {
         return index;
     }
 
@@ -36,7 +36,7 @@ public class Morador {
 
     // só quem vai mexer no index é o writer
     public void setIndex(int index) {
-        index = index;
+        this.index = index;
     }
 
     public String getEmail() {
