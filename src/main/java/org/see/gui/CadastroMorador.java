@@ -8,16 +8,34 @@ import javax.swing.SpringLayout;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
+
+import org.see.modelo.Morador;
+import org.see.repository.writer.MoradorWriter;
+
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JCheckBox;
 
 public class CadastroMorador {
 
 	private JFrame frame;
 	private JButton btnSalvar;
-
+	private JLabel lblNome;
+	private JTextField txtNome;
+	private JLabel lblEmail;
+	private JTextField txtEmail;
+	private JCheckBox chckAtivo;
+	private MoradorWriter mw;
 	
 	public CadastroMorador() {
+		try {
+			mw = new MoradorWriter();
+		}catch(FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
 		initialize();
 	}
 
@@ -49,6 +67,24 @@ public class CadastroMorador {
 		frame.getContentPane().add(separator);
 		
 		btnSalvar = new JButton("Salvar");
+		btnSalvar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String nome = txtNome.getText(); 
+				String email = txtEmail.getText();
+				boolean ativo = chckAtivo.isSelected();
+				System.out.println(ativo);
+				if(nome!="" && email!="") {
+					try {
+						mw.write(new Morador(nome, email, ativo));
+					}catch(Exception e2) {
+						e2.printStackTrace();
+					}
+				}else{
+					System.out.println("Criar janelas de erro");
+				}
+				
+			}
+		});
 		springLayout.putConstraint(SpringLayout.NORTH, btnSalvar, -45, SpringLayout.SOUTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, btnSalvar, -10, SpringLayout.SOUTH, frame.getContentPane());
 		btnSalvar.setBorder(new LineBorder(Color.WHITE, 2));
@@ -74,7 +110,45 @@ public class CadastroMorador {
 		btnCancelar.setContentAreaFilled(false);
 		btnCancelar.setBorder(new LineBorder(Color.WHITE, 2));
 		frame.getContentPane().add(btnCancelar);
-		frame.setBounds(100, 100, 800, 600);
+		
+		lblNome = new JLabel("Nome:");
+		springLayout.putConstraint(SpringLayout.NORTH, lblNome, 6, SpringLayout.SOUTH, separator);
+		springLayout.putConstraint(SpringLayout.WEST, lblNome, 0, SpringLayout.WEST, lblNewLabel);
+		lblNome.setForeground(Color.WHITE);
+		lblNome.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+		frame.getContentPane().add(lblNome);
+		
+		txtNome = new JTextField();
+		springLayout.putConstraint(SpringLayout.NORTH, txtNome, 4, SpringLayout.SOUTH, lblNome);
+		springLayout.putConstraint(SpringLayout.WEST, txtNome, 0, SpringLayout.WEST, lblNewLabel);
+		springLayout.putConstraint(SpringLayout.EAST, txtNome, 0, SpringLayout.EAST, lblNewLabel);
+		frame.getContentPane().add(txtNome);
+		txtNome.setColumns(10);
+		
+		lblEmail = new JLabel("E-mail:");
+		springLayout.putConstraint(SpringLayout.NORTH, lblEmail, 6, SpringLayout.SOUTH, txtNome);
+		springLayout.putConstraint(SpringLayout.WEST, lblEmail, 0, SpringLayout.WEST, lblNewLabel);
+		lblEmail.setForeground(Color.WHITE);
+		lblEmail.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+		frame.getContentPane().add(lblEmail);
+		
+		txtEmail = new JTextField();
+		springLayout.putConstraint(SpringLayout.NORTH, txtEmail, 0, SpringLayout.SOUTH, lblEmail);
+		springLayout.putConstraint(SpringLayout.WEST, txtEmail, 0, SpringLayout.WEST, lblNewLabel);
+		springLayout.putConstraint(SpringLayout.EAST, txtEmail, 0, SpringLayout.EAST, lblNewLabel);
+		springLayout.putConstraint(SpringLayout.EAST, txtNome, 0, SpringLayout.EAST, separator);
+
+		txtEmail.setColumns(10);
+		frame.getContentPane().add(txtEmail);
+		
+		chckAtivo = new JCheckBox("Ativo");
+		springLayout.putConstraint(SpringLayout.NORTH, chckAtivo, 6, SpringLayout.SOUTH, txtEmail);
+		springLayout.putConstraint(SpringLayout.WEST, chckAtivo, 0, SpringLayout.WEST, lblNewLabel);
+		chckAtivo.setForeground(Color.WHITE);
+		chckAtivo.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+		chckAtivo.setBackground(Color.DARK_GRAY);
+		frame.getContentPane().add(chckAtivo);
+		frame.setBounds(100, 100, 640, 300);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		visible();
@@ -83,5 +157,4 @@ public class CadastroMorador {
 	private void visible() {
 		frame.setVisible(true);
 	}
-	
 }

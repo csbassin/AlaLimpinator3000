@@ -30,7 +30,7 @@ public class MoradorReader implements ReaderInterface<Morador> {
         if(firstByte > reader.getLength()){
             throw new Exception("índice de morador inexistente."); //todo adicionar uma exceção de gente
         }
-        return new Morador(index, reader.readString(true, firstByte, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen));
+        return new Morador(index, reader.readString(true, firstByte, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen), reader.readBoolean());
     }
 
     public Morador readNext() throws IOException, PosicaoDeCursorInvalidaException {
@@ -40,7 +40,7 @@ public class MoradorReader implements ReaderInterface<Morador> {
         if(reader.getCursor()%Morador.getMoradorSizeInBytes()!=0){ // calculando se o cursor está no início de um morador
             throw new PosicaoDeCursorInvalidaException("O cursor não aponta para o início de um morador.");
         }
-        return new Morador((int) (reader.getCursor()/Morador.getMoradorSizeInBytes()), reader.readString(false, 0, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen));
+        return new Morador((int) (reader.getCursor()/Morador.getMoradorSizeInBytes()), reader.readString(false, 0, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen), reader.readBoolean());
     }
 
     public void close() throws IOException {

@@ -13,14 +13,14 @@ public class Main {
         try{
             MoradorWriter mw = new MoradorWriter();
             MoradorReader mr = new MoradorReader();
-            Morador morador = new Morador("Cauã", "cauabassin@outlook.com");
+            Morador morador = new Morador("Cauã", "cauabassin@outlook.com", true);
             mw.write(morador);
-            morador = new Morador("Eric", "emdias@id.uff.br");
+            morador = new Morador("Eric", "emdias@id.uff.br", false);
             mw.write(morador);
-            morador = mr.read(1);
-            System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail());
+            morador = mr.read(0);
+            System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail()+", ativo: "+morador.isAtivo());
             morador = mr.readNext();
-            System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail());
+            System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail()+", ativo: "+morador.isAtivo());
             morador = mr.readNext();
             if(morador == null){
                 System.out.println("Não há mais moradores.");

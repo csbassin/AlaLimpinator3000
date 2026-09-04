@@ -17,6 +17,14 @@ public class BinFileReader {
         raf.seek(cursor);
     }
 
+    public boolean readBoolean() throws IOException {
+        byte b =  raf.readByte();
+        if(b == 0){
+            return false;
+        }
+        return true;
+    }
+
     public long getCursor() throws IOException {
         return raf.getFilePointer();
     }

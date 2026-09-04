@@ -26,8 +26,10 @@ public class MoradorWriter {
 
     public int write(Morador morador) throws IOException, StringMuitoLongaException {
         int index = (int) writer.getLength()/Morador.getMoradorSizeInBytes();
+        writer.setCursorEnd(); // move o cursor para o fim do arquivo
         writer.writeString(morador.getNome(), StaticConfigObjects.maxMoradorNameLen);
         writer.writeString(morador.getEmail(), StaticConfigObjects.maxEmailLen);
+        writer.writeBoolean(morador.isAtivo());
         writer.flush();
         morador.setIndex(index);
         return index;

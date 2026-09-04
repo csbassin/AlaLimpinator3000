@@ -7,22 +7,34 @@ public class Morador {
     private int index;
     private String nome;
     private String email;
+    private boolean ativo;
 
     public Morador(){}
-    public Morador(String nome, String email){
+    public Morador(String nome, String email, boolean ativo){
         this.nome = nome;
         this.email = email;
+        this.ativo = ativo;
     }
-    public Morador(int index, String nome, String email){
+    public Morador(int index, String nome, String email, boolean ativo){
         this.nome = nome;
         this.email = email;
         this.index = index;
+        this.ativo = ativo;
     }
 
     public int getIndex() {
         return index;
     }
 
+    public boolean isAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    // só quem vai mexer no index é o writer
     public void setIndex(int index) {
         index = index;
     }
@@ -50,6 +62,6 @@ public class Morador {
     }
 
     public static int getMoradorSizeInBytes(){
-        return StaticConfigObjects.maxMoradorNameLen+StaticConfigObjects.maxEmailLen;
+        return StaticConfigObjects.maxMoradorNameLen+StaticConfigObjects.maxEmailLen+1; //1 é um byte que representa o boolean "ativo"
     }
 }

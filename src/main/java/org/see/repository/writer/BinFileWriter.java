@@ -11,17 +11,33 @@ import java.time.LocalDateTime;
 
 public class BinFileWriter implements AutoCloseable {
     private ByteArrayOutputStream buffer;
-    private FileOutputStream fos;
+    private RandomAccessFile raf;
     private File file;
 
     public BinFileWriter(File file) throws FileNotFoundException {
         this.file = file;
-        fos = new FileOutputStream(file, true);
+        raf = new RandomAccessFile(file, "rw");
         this.buffer = new ByteArrayOutputStream();
     }
 
     public long getLength(){
         return file.length();
+    }
+
+    public void setCursor(long cursor) throws IOException {
+        raf.seek(cursor);
+    }
+
+    public void setCursorEnd() throws IOException {
+        raf.seek(file.length());
+    }
+
+    public void writeBoolean(boolean value){
+        if(value){
+            buffer.writeBytes(new byte[]{1});
+        }else{
+            buffer.writeBytes(new byte[]{0});
+        }
     }
 
     public void writeData(LocalDate data){
@@ -69,7 +85,8 @@ public class BinFileWriter implements AutoCloseable {
     }
 
     public void flush() throws IOException {
-        fos.write(buffer.toByteArray());
+        raf.write(buffer.toByteArray());
+        clear();
     }
 
     public byte[] toByteArray() {
