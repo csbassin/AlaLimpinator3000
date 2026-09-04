@@ -17,8 +17,14 @@ public class Main {
             mw.write(morador);
             morador = new Morador("Eric", "emdias@id.uff.br");
             mw.write(morador);
-            morador = mr.readMorador(1);
+            morador = mr.read(1);
             System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail());
+            morador = mr.readNext();
+            System.out.println("Morador "+morador.getIndex()+": "+morador.getNome()+", "+morador.getEmail());
+            morador = mr.readNext();
+            if(morador == null){
+                System.out.println("Não há mais moradores.");
+            }
         }catch(Exception e) {
             e.printStackTrace();
             System.out.println("teste falhou");

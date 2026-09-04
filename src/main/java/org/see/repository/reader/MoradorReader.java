@@ -1,14 +1,16 @@
 package org.see.repository.reader;
 
 import org.see.config.StaticConfigObjects;
+import org.see.exception.PosicaoDeCursorInvalidaException;
 import org.see.modelo.Morador;
+import org.see.repository.interfaces.ReaderInterface;
 import org.see.repository.writer.BinFileWriter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class MoradorReader {
+public class MoradorReader implements ReaderInterface<Morador> {
     private static BinFileReader reader = null;
 
     public MoradorReader() throws FileNotFoundException {
@@ -23,11 +25,25 @@ public class MoradorReader {
         }
     }
 
-    public Morador readMorador(int index) throws Exception {
+    public Morador read(int index) throws Exception {
         long firstByte = (long) index*(Morador.getMoradorSizeInBytes());
         if(firstByte > reader.getLength()){
             throw new Exception("índice de morador inexistente."); //todo adicionar uma exceção de gente
         }
-        return new Morador(index, reader.readString(true, firstByte, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxMoradorNameLen));
+        return new Morador(index, reader.readString(true, firstByte, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen));
+    }
+
+    public Morador readNext() throws IOException, PosicaoDeCursorInvalidaException {
+        if(reader.getCursor() == reader.getLength()){ // se cheguei no fim do arquivo
+            return null;
+        }
+        if(reader.getCursor()%Morador.getMoradorSizeInBytes()!=0){ // calculando se o cursor está no início de um morador
+            throw new PosicaoDeCursorInvalidaException("O cursor não aponta para o início de um morador.");
+        }
+        return new Morador((int) (reader.getCursor()/Morador.getMoradorSizeInBytes()), reader.readString(false, 0, StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen));
+    }
+
+    public void close() throws IOException {
+        reader.close();
     }
 }
