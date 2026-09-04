@@ -4,6 +4,7 @@ import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
 
 public class Morador {
+    private int index;
     private String nome;
     private String email;
 
@@ -11,6 +12,19 @@ public class Morador {
     public Morador(String nome, String email){
         this.nome = nome;
         this.email = email;
+    }
+    public Morador(int index, String nome, String email){
+        this.nome = nome;
+        this.email = email;
+        this.index = index;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        index = index;
     }
 
     public String getEmail() {
@@ -33,5 +47,9 @@ public class Morador {
             throw new StringMuitoLongaException("Nome deve ter no máximo"+StaticConfigObjects.maxMoradorNameLen+"caracteres.");
         }
         this.nome = nome;
+    }
+
+    public static int getMoradorSizeInBytes(){
+        return StaticConfigObjects.maxMoradorNameLen+StaticConfigObjects.maxEmailLen;
     }
 }

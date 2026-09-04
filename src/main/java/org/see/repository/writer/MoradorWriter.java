@@ -1,4 +1,4 @@
-package org.see.repository;
+package org.see.repository.writer;
 
 import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
@@ -24,9 +24,12 @@ public class MoradorWriter {
         }
     }
 
-    public void write(Morador morador) throws IOException, StringMuitoLongaException {
+    public int write(Morador morador) throws IOException, StringMuitoLongaException {
+        int index = (int) writer.getLength()/Morador.getMoradorSizeInBytes();
         writer.writeString(morador.getNome(), StaticConfigObjects.maxMoradorNameLen);
         writer.writeString(morador.getEmail(), StaticConfigObjects.maxEmailLen);
         writer.flush();
+        morador.setIndex(index);
+        return index;
     }
 }

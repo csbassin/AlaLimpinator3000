@@ -1,4 +1,4 @@
-package org.see.repository;
+package org.see.repository.writer;
 
 import org.see.Miscelaneous;
 import org.see.exception.StringMuitoLongaException;
@@ -12,12 +12,17 @@ import java.time.LocalDateTime;
 public class BinFileWriter implements AutoCloseable {
     private ByteArrayOutputStream buffer;
     private FileOutputStream fos;
+    private File file;
 
     public BinFileWriter(File file) throws FileNotFoundException {
+        this.file = file;
         fos = new FileOutputStream(file, true);
         this.buffer = new ByteArrayOutputStream();
     }
 
+    public long getLength(){
+        return file.length();
+    }
 
     public void writeData(LocalDate data){
         int[] formatted = Miscelaneous.dateToArray(data);
