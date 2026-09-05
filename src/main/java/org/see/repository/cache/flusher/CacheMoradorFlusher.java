@@ -11,4 +11,5 @@ public class CacheMoradorFlusher extends CacheFlusher<Morador>{
     public CacheMoradorFlusher(CacheMorador cache) throws FileNotFoundException {
         super(cache, new MoradorWriter());
     }
+   
 }

@@ -14,6 +14,8 @@ import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class MainWindow {
 
@@ -59,6 +61,12 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame();
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				
+			}
+		});
 		frame.setTitle("Combate à porcaria: Por Cauã Bassin e Eric Maia Dias");
 		frame.getContentPane().setFont(new Font("Noto Sans", Font.PLAIN, 14));
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -96,6 +104,21 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.SOUTH, btnNewButton, 35, SpringLayout.NORTH, separator);
 		springLayout.putConstraint(SpringLayout.EAST, btnNewButton, -10, SpringLayout.EAST, separator);
 		frame.getContentPane().add(btnNewButton);
+		
+		JButton btnListarMoradores = new JButton("Visualizar Moradores Cadastrados");
+		btnListarMoradores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ListagemMorador();
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, btnListarMoradores, 6, SpringLayout.SOUTH, btnNewButton);
+		springLayout.putConstraint(SpringLayout.WEST, btnListarMoradores, 0, SpringLayout.WEST, btnNewButton);
+		springLayout.putConstraint(SpringLayout.EAST, btnListarMoradores, 0, SpringLayout.EAST, btnNewButton);
+		btnListarMoradores.setForeground(Color.WHITE);
+		btnListarMoradores.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		btnListarMoradores.setContentAreaFilled(false);
+		btnListarMoradores.setBorder(new LineBorder(Color.WHITE, 2));
+		frame.getContentPane().add(btnListarMoradores);
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
