@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class BinFileReader {
-    // todo adicionar cache aqui
     private RandomAccessFile raf;
 
     public BinFileReader(File file) throws FileNotFoundException {

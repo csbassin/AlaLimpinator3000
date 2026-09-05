@@ -1,9 +1,11 @@
 package org.see.modelo;
 
+import org.see.annotation.Index;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
 
 public class Morador {
+    @Index
     private Integer index = null;
     private String nome;
     private String email;
