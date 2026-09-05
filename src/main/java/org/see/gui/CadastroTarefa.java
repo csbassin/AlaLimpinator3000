@@ -9,14 +9,9 @@ import javax.swing.JSeparator;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
-import org.see.modelo.tarefas.Tarefa;
-import org.see.repository.writer.TarefaWriter;
-
 import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
-import javax.swing.JCheckBox;
 
 public class CadastroTarefa {
 
@@ -24,10 +19,9 @@ public class CadastroTarefa {
     private JButton btnSalvar;
     private JLabel lblNome;
     private JTextField txtNome;
-    private JLabel lblEmail;
-    private JTextField txtEmail;
-    private JCheckBox chckAtivo;
-    private TarefaWriter tw;
+    private JLabel lblDescricao;
+    private JTextField txtDescricao;
+//    private TarefaWriter tw;
 
     public CadastroTarefa() {
 //        try {
@@ -39,14 +33,15 @@ public class CadastroTarefa {
         initialize();
     }
 
-    /**
-     * Initialize the contents of the frame.
-     */
     private void initialize() {
         frame = new JFrame();
         frame.setTitle("Cadastro de Tarefa");
         frame.getContentPane().setFont(new Font("Noto Sans", Font.PLAIN, 14));
         frame.getContentPane().setBackground(Color.DARK_GRAY);
+
+        frame.setBounds(100, 100, 640, 400);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         SpringLayout springLayout = new SpringLayout();
         frame.getContentPane().setLayout(springLayout);
 
@@ -70,19 +65,18 @@ public class CadastroTarefa {
         btnSalvar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String nome = txtNome.getText();
-                String email = txtEmail.getText();
-                boolean ativo = chckAtivo.isSelected();
-                System.out.println(ativo);
-                if(nome.trim().equals("") && email.trim().equals("")) {
-                    try {
-                        tw.write(new Tarefa(nome, descicao, ativo));
-                    }catch(Exception e2) {
-                        e2.printStackTrace();
-                    }
-                }else{
-                    System.out.println("Criar janelas de erro");
-                }
+                String descicao = txtDescricao.getText();
 
+                if(!nome.trim().isEmpty() && !descicao.trim().isEmpty()) {
+//                    try {
+//                        tw.write(new Tarefa(nome, descicao, numero));
+//                    }catch(Exception e2) {
+//                        e2.printStackTrace();
+//                    }
+                    System.out.println("Tentou salvar!"); // Apenas para teste
+                }else{
+                    System.out.println("Criar janelas de erro - Campos vazios");
+                }
             }
         });
         springLayout.putConstraint(SpringLayout.NORTH, btnSalvar, -45, SpringLayout.SOUTH, frame.getContentPane());
@@ -125,21 +119,19 @@ public class CadastroTarefa {
         frame.getContentPane().add(txtNome);
         txtNome.setColumns(10);
 
-        lblEmail = new JLabel("E-mail:");
-        springLayout.putConstraint(SpringLayout.NORTH, lblEmail, 6, SpringLayout.SOUTH, txtNome);
-        springLayout.putConstraint(SpringLayout.WEST, lblEmail, 0, SpringLayout.WEST, lblNewLabel);
-        lblEmail.setForeground(Color.WHITE);
-        lblEmail.setFont(new Font("Noto Sans", Font.PLAIN, 14));
-        frame.getContentPane().add(lblEmail);
+        lblDescricao = new JLabel("Descrição:");
+        springLayout.putConstraint(SpringLayout.NORTH, lblDescricao, 6, SpringLayout.SOUTH, txtNome);
+        springLayout.putConstraint(SpringLayout.WEST, lblDescricao, 0, SpringLayout.WEST, lblNewLabel);
+        lblDescricao.setForeground(Color.WHITE);
+        lblDescricao.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+        frame.getContentPane().add(lblDescricao);
 
-        txtEmail = new JTextField();
-        springLayout.putConstraint(SpringLayout.NORTH, txtEmail, 0, SpringLayout.SOUTH, lblEmail);
-        springLayout.putConstraint(SpringLayout.WEST, txtEmail, 0, SpringLayout.WEST, lblNewLabel);
-        springLayout.putConstraint(SpringLayout.EAST, txtEmail, 0, SpringLayout.EAST, lblNewLabel);
-        springLayout.putConstraint(SpringLayout.EAST, txtNome, 0, SpringLayout.EAST, separator);
-
-        txtEmail.setColumns(10);
-        frame.getContentPane().add(txtEmail);
+        txtDescricao = new JTextField();
+        springLayout.putConstraint(SpringLayout.NORTH, txtDescricao, 0, SpringLayout.SOUTH, lblDescricao);
+        springLayout.putConstraint(SpringLayout.WEST, txtDescricao, 0, SpringLayout.WEST, lblNewLabel);
+        springLayout.putConstraint(SpringLayout.EAST, txtDescricao, 0, SpringLayout.EAST, lblNewLabel);
+        txtDescricao.setColumns(10);
+        frame.getContentPane().add(txtDescricao);
 
         visible();
     }
