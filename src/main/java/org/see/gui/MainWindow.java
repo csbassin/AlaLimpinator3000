@@ -1,13 +1,11 @@
 package org.see.gui;
 
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
 import javax.swing.SpringLayout;
 import javax.swing.JSeparator;
 import javax.swing.JButton;
@@ -20,21 +18,13 @@ import java.awt.event.WindowEvent;
 public class MainWindow {
 
 	private JFrame frame;
-	private JButton btnNewButton;
+	private JButton btnCadastrarMorador;
+	private JButton btnCadastrarTarefa;
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		try {
 			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (UnsupportedLookAndFeelException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		EventQueue.invokeLater(new Runnable() {
@@ -49,16 +39,10 @@ public class MainWindow {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
 	public MainWindow() {
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frame = new JFrame();
 		frame.addWindowListener(new WindowAdapter() {
@@ -72,7 +56,7 @@ public class MainWindow {
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		SpringLayout springLayout = new SpringLayout();
 		frame.getContentPane().setLayout(springLayout);
-		
+
 		JLabel lblNewLabel = new JLabel("AlaLimpinator3000");
 		springLayout.putConstraint(SpringLayout.NORTH, lblNewLabel, 0, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 10, SpringLayout.WEST, frame.getContentPane());
@@ -81,29 +65,46 @@ public class MainWindow {
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Noto Sans", Font.PLAIN, 18));
 		frame.getContentPane().add(lblNewLabel);
-		
+
 		JSeparator separator = new JSeparator();
 		springLayout.putConstraint(SpringLayout.NORTH, separator, 6, SpringLayout.SOUTH, lblNewLabel);
 		springLayout.putConstraint(SpringLayout.WEST, separator, 0, SpringLayout.WEST, lblNewLabel);
 		springLayout.putConstraint(SpringLayout.SOUTH, separator, 8, SpringLayout.SOUTH, lblNewLabel);
 		springLayout.putConstraint(SpringLayout.EAST, separator, 0, SpringLayout.EAST, lblNewLabel);
 		frame.getContentPane().add(separator);
-		
-		btnNewButton = new JButton("Cadastrar Morador");
-		btnNewButton.addActionListener(new ActionListener() {
+
+		btnCadastrarMorador = new JButton("Cadastrar Morador");
+		btnCadastrarMorador.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new CadastroMorador();
 			}
 		});
-		btnNewButton.setBorder(new LineBorder(Color.WHITE, 2));
-		btnNewButton.setForeground(Color.WHITE);
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setFont(new Font("Noto Sans", Font.PLAIN, 16));
-		springLayout.putConstraint(SpringLayout.NORTH, btnNewButton, 6, SpringLayout.SOUTH, separator);
-		springLayout.putConstraint(SpringLayout.WEST, btnNewButton, 10, SpringLayout.WEST, separator);
-		springLayout.putConstraint(SpringLayout.SOUTH, btnNewButton, 35, SpringLayout.NORTH, separator);
-		springLayout.putConstraint(SpringLayout.EAST, btnNewButton, -10, SpringLayout.EAST, separator);
-		frame.getContentPane().add(btnNewButton);
+
+		btnCadastrarMorador.setBorder(new LineBorder(Color.WHITE, 2));
+		btnCadastrarMorador.setForeground(Color.WHITE);
+		btnCadastrarMorador.setContentAreaFilled(false);
+		btnCadastrarMorador.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		springLayout.putConstraint(SpringLayout.NORTH, btnCadastrarMorador, 6, SpringLayout.SOUTH, separator);
+		springLayout.putConstraint(SpringLayout.WEST, btnCadastrarMorador, 10, SpringLayout.WEST, separator);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnCadastrarMorador, 40, SpringLayout.SOUTH, separator);
+		springLayout.putConstraint(SpringLayout.EAST, btnCadastrarMorador, -10, SpringLayout.EAST, separator);
+		frame.getContentPane().add(btnCadastrarMorador);
+
+		btnCadastrarTarefa = new JButton("Cadastrar Tarefa");
+		btnCadastrarTarefa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new CadastroTarefa();
+			}
+		});
+		btnCadastrarTarefa.setBorder(new LineBorder(Color.WHITE, 2));
+		btnCadastrarTarefa.setForeground(Color.WHITE);
+		btnCadastrarTarefa.setContentAreaFilled(false);
+		btnCadastrarTarefa.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		springLayout.putConstraint(SpringLayout.NORTH, btnCadastrarTarefa, 10, SpringLayout.SOUTH, btnCadastrarMorador);
+		springLayout.putConstraint(SpringLayout.WEST, btnCadastrarTarefa, 10, SpringLayout.WEST, separator);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnCadastrarTarefa, 40, SpringLayout.SOUTH, btnCadastrarMorador);
+		springLayout.putConstraint(SpringLayout.EAST, btnCadastrarTarefa, -10, SpringLayout.EAST, separator);
+		frame.getContentPane().add(btnCadastrarTarefa);
 		
 		JButton btnListarMoradores = new JButton("Visualizar Moradores Cadastrados");
 		btnListarMoradores.addActionListener(new ActionListener() {
@@ -119,6 +120,7 @@ public class MainWindow {
 		btnListarMoradores.setContentAreaFilled(false);
 		btnListarMoradores.setBorder(new LineBorder(Color.WHITE, 2));
 		frame.getContentPane().add(btnListarMoradores);
+
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}

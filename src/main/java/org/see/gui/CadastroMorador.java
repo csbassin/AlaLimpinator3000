@@ -73,7 +73,7 @@ public class CadastroMorador {
 				String email = txtEmail.getText();
 				boolean ativo = chckAtivo.isSelected();
 				System.out.println(ativo);
-				if(nome!="" && email!="") {
+				if(nome.trim().equals("") && email.trim().equals("")) {
 					try {
 						mw.write(new Morador(nome, email, ativo));
 					}catch(Exception e2) {
