@@ -29,10 +29,11 @@ public class CacheFlusher<T> extends Thread{
         while(!stop){
             try {
                 synchronized (this){
-                    wait(StaticConfigObjects.CACHE_FLUSHING_INTERVAL);
+                    wait();
                 }
                 for(CacheLine line:cache){
                     if(line.isModified()){
+                        System.out.println("Encontrei dado que precisa de flushing.");
                         try{
                             writer.update((T)line.getElement());
                             line.setModified(false);

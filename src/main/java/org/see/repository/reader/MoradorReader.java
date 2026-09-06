@@ -1,11 +1,10 @@
 package org.see.repository.reader;
 
+import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.PosicaoDeCursorInvalidaException;
 import org.see.modelo.Morador;
-import org.see.repository.cache.CacheMorador;
 import org.see.repository.interfaces.ReaderInterface;
-import org.see.repository.writer.MoradorWriter;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class MoradorReader implements ReaderInterface<Morador> {
             f = new File(f.getAbsolutePath()+"/moradores.bin");
             System.out.println(f.length());
             reader = new BinFileReader(f);
-            StaticConfigObjects.FAKE_MORADOR_FILE_LENGTH = reader.getLength();
+            FakeFileLengths.morador = reader.getLength();
         }
     }
 
@@ -42,7 +41,7 @@ public class MoradorReader implements ReaderInterface<Morador> {
     public Morador read(int index) throws Exception {
         long firstByte = (long) index*(Morador.getMoradorSizeInBytes());
 
-        if(firstByte > StaticConfigObjects.FAKE_MORADOR_FILE_LENGTH){
+        if(firstByte > FakeFileLengths.morador){
             throw new Exception("índice de morador inexistente."); //todo adicionar uma exceção de gente
         }
 
@@ -54,7 +53,7 @@ public class MoradorReader implements ReaderInterface<Morador> {
     }
 
     public Morador readNext() throws IOException, PosicaoDeCursorInvalidaException, IllegalAccessException {
-        if(reader.getCursor() == StaticConfigObjects.FAKE_MORADOR_FILE_LENGTH){ // se cheguei no fim do arquivo
+        if(reader.getCursor() == FakeFileLengths.morador){ // se cheguei no fim do arquivo
             return null;
         }
         if(reader.getCursor()%Morador.getMoradorSizeInBytes()!=0){ // calculando se o cursor está no início de um morador

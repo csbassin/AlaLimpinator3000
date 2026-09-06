@@ -25,19 +25,11 @@ public class Main {
             morador = cache.read(0);
             System.out.println(morador.toString());
 
-            morador = mr.readNext();
+            morador = cache.read(1);
             System.out.println(morador.toString());
-
-            morador.setNome("Garibaldo");
-            mw.update(morador);
-
-            morador = mr.read(1);
-            System.out.println(morador.toString());
-
-            morador = mr.readNext();
-            if(morador == null){
+            /*if(morador == null){
                 System.out.println("Não há mais moradores.");
-            }
+            }*/
         }catch(Exception e) {
             e.printStackTrace();
             System.out.println("teste falhou");

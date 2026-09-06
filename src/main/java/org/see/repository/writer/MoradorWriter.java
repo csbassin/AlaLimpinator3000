@@ -1,10 +1,10 @@
 package org.see.repository.writer;
 
+import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.NullIndexException;
 import org.see.exception.StringMuitoLongaException;
 import org.see.modelo.Morador;
-import org.see.repository.cache.CacheMorador;
 import org.see.repository.interfaces.WriterInterface;
 
 import java.io.File;
@@ -24,7 +24,7 @@ public class MoradorWriter implements WriterInterface<Morador> {
             f = new File(f.getAbsolutePath()+"/moradores.bin");
             System.out.println(f.length());
             writer = new BinFileWriter(f);
-            StaticConfigObjects.FAKE_MORADOR_FILE_LENGTH = writer.getLength();
+            FakeFileLengths.morador = writer.getLength();
         }
     }
     private long getFirstByteOfMorador(int index){

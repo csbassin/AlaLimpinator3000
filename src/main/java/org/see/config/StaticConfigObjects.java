@@ -8,6 +8,4 @@ public class StaticConfigObjects {
     public static final String HOME_DIR = System.getProperty("user.home");
     public static final int MAX_MORADOR_NAME_LEN = 50;
     public static final int MAX_EMAIL_LEN = 100;
-    public static long FAKE_MORADOR_FILE_LENGTH;
-    public static int CACHE_FLUSHING_INTERVAL = 5000;//ms
 }

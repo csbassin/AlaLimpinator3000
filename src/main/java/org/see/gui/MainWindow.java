@@ -112,9 +112,9 @@ public class MainWindow {
 				new ListagemMorador();
 			}
 		});
-		springLayout.putConstraint(SpringLayout.NORTH, btnListarMoradores, 6, SpringLayout.SOUTH, btnNewButton);
-		springLayout.putConstraint(SpringLayout.WEST, btnListarMoradores, 0, SpringLayout.WEST, btnNewButton);
-		springLayout.putConstraint(SpringLayout.EAST, btnListarMoradores, 0, SpringLayout.EAST, btnNewButton);
+		springLayout.putConstraint(SpringLayout.NORTH, btnListarMoradores, 6, SpringLayout.SOUTH, btnCadastrarTarefa);
+		springLayout.putConstraint(SpringLayout.WEST, btnListarMoradores, 0, SpringLayout.WEST, btnCadastrarTarefa);
+		springLayout.putConstraint(SpringLayout.EAST, btnListarMoradores, 0, SpringLayout.EAST, btnCadastrarTarefa);
 		btnListarMoradores.setForeground(Color.WHITE);
 		btnListarMoradores.setFont(new Font("Noto Sans", Font.PLAIN, 16));
 		btnListarMoradores.setContentAreaFilled(false);

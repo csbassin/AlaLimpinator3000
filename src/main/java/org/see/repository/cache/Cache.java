@@ -1,6 +1,8 @@
 package org.see.repository.cache;
 
+import org.see.annotation.FakeSize;
 import org.see.annotation.Index;
+import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.NullIndexException;
 import org.see.exception.SemAnotacaoIndexException;
@@ -11,6 +13,7 @@ import org.see.repository.interfaces.ReaderInterface;
 import org.see.repository.interfaces.WriterInterface;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
@@ -36,37 +39,55 @@ public /*abstract*/ class Cache<T> extends ArrayList<CacheLine<T>> {
     public void write(T objeto) throws IllegalAccessException, IOException, StringMuitoLongaException, NullIndexException { // vou fazer como um cache de mapeamento direto. A posição onde ele vai entrar é @Index%100
         // passo 1: olhar se o cara já está na cache. Se já estiver, substitui e seta "modificado" como 1
         // preciso pegar o valor do campo anotado com Index
-        Field index = null;
-        for(Field field:objeto.getClass().getDeclaredFields()){
-            if(field.isAnnotationPresent(Index.class)) {
-                index = field;
-                index.setAccessible(true);
+
+        Field fieldIndex = null;
+        for(Field f:objeto.getClass().getDeclaredFields()){
+            if(f.isAnnotationPresent(Index.class)) {
+                fieldIndex = f;
+                fieldIndex.setAccessible(true);
                 break;
             }
         }
 
-        if(index==null){
+        if(fieldIndex==null){
             throw new SemAnotacaoIndexException("Não se pode criar um cache de uma classe sem um campo anotado com @Index.");
         }
 
-        Integer value = (Integer) index.get(objeto);
+        Integer valueIndex = (Integer) fieldIndex.get(objeto);
         // Objeto ainda não está presente
-        if(value == null){
-            value = (int) StaticConfigObjects.FAKE_MORADOR_FILE_LENGTH/Morador.getMoradorSizeInBytes();
-            index.set(objeto, value);
-            wr.write(objeto);
+        // preciso pegar o fakeFile correspondente
+        FakeFileLengths fake = new FakeFileLengths();
+        Field fieldFakeSize = null;
+        for(Field f:fake.getClass().getDeclaredFields()){ // para cada campo
+            if(f.isAnnotationPresent(FakeSize.class)){ // verifico se tem a anotação fakeSize
+                FakeSize a = f.getDeclaredAnnotation(FakeSize.class);
+                if(a.target() == objeto.getClass()){ // verifico se o alvo é igual ao desejado
+                    System.out.println("Achei o fakeSize correspondente");
+                    fieldFakeSize = f;
+                    break;
+                }
+            }
         }
 
-        int i = calculaIndex(value);
+        long valueFakeSize = fieldFakeSize.getLong(fake);
+        if(valueIndex == null){
+            valueIndex = (int) valueFakeSize /Morador.getMoradorSizeInBytes();
+            valueFakeSize += Morador.getMoradorSizeInBytes();
+            fieldIndex.set(objeto, valueIndex);
+            wr.write(objeto);
+            fieldFakeSize.set(fake, valueFakeSize);
+        }
+
+        int i = calculaIndex(valueIndex);
         CacheLine<T> line = this.get(calculaIndex(i));
 
         // três casos: é null, é o mesmo número, é número diferente. O último representa uma substituição
         if(line.getElement() == null){
             System.out.println("Cache miss");
             // não posso concluir nada sobre a modificação aqui, pode ser escrito na cache por um read ou um write
-            line.setElementNumber(value);
+            line.setElementNumber(valueIndex);
             line.setElement(objeto);
-        }else if(line.getElementNumber()==value){ // espero que faça unboxing automático
+        }else if(line.getElementNumber()==valueIndex){ // espero que faça unboxing automático
             System.out.println("Cache hit");
             //Quando eu escrevo por cima de um cara igual, é porque foi modificado.
             line.setElement(objeto);
@@ -76,7 +97,7 @@ public /*abstract*/ class Cache<T> extends ArrayList<CacheLine<T>> {
             if(line.isModified()){
                 wr.update(objeto);
             }
-            line.setElementNumber(value);
+            line.setElementNumber(valueIndex);
             line.setElement(objeto);
         }
         synchronized(flusher) {
