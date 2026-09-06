@@ -1,5 +1,6 @@
 package org.see.service;
 
+import org.see.exception.EmailJaCadastradoException;
 import org.see.exception.NullIndexException;
 import org.see.exception.StringMuitoLongaException;
 import org.see.modelo.Morador;
@@ -16,8 +17,31 @@ public class MoradorService {
         cacheMorador = CacheMorador.getCacheMorador();
     }
 
-    public void cadastrar(Morador morador) throws IOException, StringMuitoLongaException, NullIndexException, IllegalAccessException {
+    public void cadastrar(Morador morador) throws Exception {
+        Morador m = findByEmail(morador.getEmail());
+        if(m!=null){
+            throw new EmailJaCadastradoException("Este e-mail já está associado a "+m.getNome());
+        }
         cacheMorador.write(morador);
+    }
+    public Morador findByEmail(String email) throws Exception {
+        for(Morador m:readAll()){
+            if(m.getEmail().equals(email)){
+                return m;
+            }
+        }
+        return null;
+    }
+
+    public List<Morador> searchByNome(String nome) throws Exception {
+        nome = nome.toLowerCase();
+        List<Morador> moradores = new ArrayList<>();
+        for(Morador m:readAll()){
+            if(m.getNome().toLowerCase().contains(nome)){
+                moradores.add(m);
+            }
+        }
+        return moradores;
     }
 
     public List<Morador> readAll() throws Exception {

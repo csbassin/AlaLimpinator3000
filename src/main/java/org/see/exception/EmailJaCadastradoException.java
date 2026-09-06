@@ -1,7 +1,7 @@
 package org.see.exception;
 
-public class EmailJaCadastradoException extends RuntimeException {
-  public EmailJaCadastradoException(String message) {
-    super(message);
-  }
+public class EmailJaCadastradoException extends Exception {
+    public EmailJaCadastradoException(String message) {
+        super(message);
+    }
 }

@@ -1,10 +1,10 @@
 package org.see;
 
 import org.see.modelo.Morador;
-import org.see.repository.cache.Cache;
-import org.see.repository.cache.CacheMorador;
-import org.see.repository.reader.MoradorReader;
-import org.see.repository.writer.MoradorWriter;
+
+import org.see.service.MoradorService;
+
+import java.util.List;
 
 public class Main {
     static void main() {
@@ -12,19 +12,20 @@ public class Main {
     }
     private static void teste(){
         try{
-            Cache<Morador> cache = CacheMorador.getCacheMorador();
+            MoradorService ms = new MoradorService();
+            List<Morador> moradores = ms.readAll();
+            System.out.println("Todos os moradores: ");
+            for(Morador m : moradores){
+                System.out.println(m.toString());
+            }
 
-            Morador morador = new Morador("Cauã", "cauabassin@outlook.com", true);
-            cache.write(morador);
-
-            morador = new Morador("Eric", "emdias@id.uff.br", false);
-            cache.write(morador);
-
-            morador = cache.read(0);
-            System.out.println(morador.toString());
-
-            morador = cache.read(1);
-            System.out.println(morador.toString());
+            moradores = ms.searchByNome("a");
+            System.out.println("Moradores cujo nome contém a: ");
+            for(Morador m : moradores){
+                System.out.println(m.toString());
+            }
+            Morador m = ms.findByEmail("cauabassin@outlook.com");
+            System.out.println("Morador de email "+m.getEmail()+" é "+m.getNome());
 
         }catch(Exception e) {
             e.printStackTrace();
