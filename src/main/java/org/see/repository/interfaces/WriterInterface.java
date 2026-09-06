@@ -7,7 +7,6 @@ import java.io.IOException;
 
 public interface WriterInterface<T> {
     //void genericWrite(T obj) throws StringMuitoLongaException, IOException;
-    int write(T obj) throws IOException, StringMuitoLongaException;
+    void write(T obj) throws IOException, StringMuitoLongaException;
     void update(T obj) throws NullIndexException, IOException, StringMuitoLongaException;
-    void writeBypassingCache(T obj) throws NullIndexException, IOException, StringMuitoLongaException;
 }

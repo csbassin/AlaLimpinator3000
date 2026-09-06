@@ -1,5 +1,6 @@
 package org.see.modelo;
 
+import org.see.annotation.FakeSize;
 import org.see.annotation.Index;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
@@ -10,8 +11,8 @@ public class Morador {
     private String nome;
     private String email;
     private boolean ativo;
+    public static long fakeSize;
 
-    public Morador(){}
     public Morador(String nome, String email, boolean ativo){
         this.nome = nome;
         this.email = email;
@@ -46,8 +47,8 @@ public class Morador {
     }
 
     public void setEmail(String email) throws StringMuitoLongaException {
-        if(email.length()> StaticConfigObjects.maxEmailLen){
-            throw new StringMuitoLongaException("E-mail deve ter no máximo "+StaticConfigObjects.maxEmailLen+" caracteres.");
+        if(email.length()> StaticConfigObjects.MAX_EMAIL_LEN){
+            throw new StringMuitoLongaException("E-mail deve ter no máximo "+StaticConfigObjects.MAX_EMAIL_LEN +" caracteres.");
         }
         this.email = email;
     }
@@ -57,13 +58,18 @@ public class Morador {
     }
 
     public void setNome(String nome) throws StringMuitoLongaException {
-        if(nome.length()>StaticConfigObjects.maxMoradorNameLen){
-            throw new StringMuitoLongaException("Nome deve ter no máximo"+StaticConfigObjects.maxMoradorNameLen+"caracteres.");
+        if(nome.length()>StaticConfigObjects.MAX_MORADOR_NAME_LEN){
+            throw new StringMuitoLongaException("Nome deve ter no máximo"+StaticConfigObjects.MAX_MORADOR_NAME_LEN +"caracteres.");
         }
         this.nome = nome;
     }
 
     public static int getMoradorSizeInBytes(){
-        return StaticConfigObjects.maxMoradorNameLen+StaticConfigObjects.maxEmailLen+1; //1 é um byte que representa o boolean "ativo"
+        return StaticConfigObjects.MAX_MORADOR_NAME_LEN +StaticConfigObjects.MAX_EMAIL_LEN +1; //1 é um byte que representa o boolean "ativo"
+    }
+
+    @Override
+    public String toString() {
+        return "Morador " + index + ": " + nome + ", "  + email + ", ativo: " + ativo;
     }
 }
