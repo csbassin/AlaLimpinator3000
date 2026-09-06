@@ -2,14 +2,17 @@ package org.see.repository.cache;
 
 import org.see.modelo.Morador;
 import org.see.repository.cache.flusher.CacheMoradorFlusher;
+import org.see.repository.reader.MoradorReader;
+import org.see.repository.writer.MoradorWriter;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class CacheMorador extends Cache<Morador>{
     private static CacheMorador cache = null;
 
-    private CacheMorador(){
-        super();
+    private CacheMorador() throws IOException {
+        super(new MoradorReader(), new MoradorWriter());
         try{
             this.flusher = new CacheMoradorFlusher(this);
             flusher.start();
@@ -18,7 +21,7 @@ public class CacheMorador extends Cache<Morador>{
         }
     }
 
-    public static CacheMorador getCacheMorador(){
+    public static CacheMorador getCacheMorador() throws IOException {
         if(cache == null){
             cache = new CacheMorador();
         }
