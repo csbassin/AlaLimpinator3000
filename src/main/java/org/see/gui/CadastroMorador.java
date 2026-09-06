@@ -11,10 +11,12 @@ import javax.swing.border.LineBorder;
 
 import org.see.modelo.Morador;
 import org.see.repository.writer.MoradorWriter;
+import org.see.service.MoradorService;
 
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 import javax.swing.JTextField;
 import javax.swing.JCheckBox;
 
@@ -27,16 +29,16 @@ public class CadastroMorador {
 	private JLabel lblEmail;
 	private JTextField txtEmail;
 	private JCheckBox chckAtivo;
-	private MoradorWriter mw;
+	private MoradorService ms;
 	
 	public CadastroMorador() {
 		try {
-			mw = new MoradorWriter();
-		}catch(FileNotFoundException e) {
+			ms = new MoradorService();
+		}catch(IOException e) {
 			e.printStackTrace();
 			return;
 		}
-		initialize();
+        initialize();
 	}
 
 	/**
@@ -73,9 +75,9 @@ public class CadastroMorador {
 				String email = txtEmail.getText();
 				boolean ativo = chckAtivo.isSelected();
 				System.out.println(ativo);
-				if(nome.trim().equals("") && email.trim().equals("")) {
+				if(!nome.trim().isEmpty() && !email.trim().isEmpty()) {
 					try {
-						mw.write(new Morador(nome, email, ativo));
+						ms.cadastrar(new Morador(nome, email, ativo));
 					}catch(Exception e2) {
 						e2.printStackTrace();
 					}

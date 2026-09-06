@@ -12,8 +12,6 @@ public class Main {
     }
     private static void teste(){
         try{
-            MoradorWriter mw = new MoradorWriter();
-            MoradorReader mr = new MoradorReader();
             Cache<Morador> cache = CacheMorador.getCacheMorador();
 
             Morador morador = new Morador("Cauã", "cauabassin@outlook.com", true);
@@ -27,9 +25,7 @@ public class Main {
 
             morador = cache.read(1);
             System.out.println(morador.toString());
-            /*if(morador == null){
-                System.out.println("Não há mais moradores.");
-            }*/
+
         }catch(Exception e) {
             e.printStackTrace();
             System.out.println("teste falhou");

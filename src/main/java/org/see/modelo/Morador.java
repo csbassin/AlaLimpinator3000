@@ -1,7 +1,10 @@
 package org.see.modelo;
 
 import org.see.annotation.FakeSize;
+import org.see.annotation.GetIndex;
+import org.see.annotation.GetSize;
 import org.see.annotation.Index;
+import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
 
@@ -27,6 +30,11 @@ public class Morador {
 
     public Integer getIndex() {
         return index;
+    }
+    @GetIndex
+    public static int getFileIndex(){
+        System.out.println("fui chamado");
+        return (int) FakeFileLengths.morador/getMoradorSizeInBytes();
     }
 
     public boolean isAtivo() {
@@ -64,6 +72,7 @@ public class Morador {
         this.nome = nome;
     }
 
+    @GetSize
     public static int getMoradorSizeInBytes(){
         return StaticConfigObjects.MAX_MORADOR_NAME_LEN +StaticConfigObjects.MAX_EMAIL_LEN +1; //1 é um byte que representa o boolean "ativo"
     }

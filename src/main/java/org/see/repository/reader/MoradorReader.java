@@ -2,6 +2,7 @@ package org.see.repository.reader;
 
 import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
+import org.see.exception.IndiceInexistenteException;
 import org.see.exception.PosicaoDeCursorInvalidaException;
 import org.see.modelo.Morador;
 import org.see.repository.interfaces.ReaderInterface;
@@ -21,6 +22,9 @@ public class MoradorReader implements ReaderInterface<Morador> {
                 f.mkdir();
             }
             f = new File(f.getAbsolutePath()+"/moradores.bin");
+            if(!f.exists()){
+                f.createNewFile();
+            }
             System.out.println(f.length());
             reader = new BinFileReader(f);
             FakeFileLengths.morador = reader.getLength();
@@ -41,8 +45,8 @@ public class MoradorReader implements ReaderInterface<Morador> {
     public Morador read(int index) throws Exception {
         long firstByte = (long) index*(Morador.getMoradorSizeInBytes());
 
-        if(firstByte > FakeFileLengths.morador){
-            throw new Exception("índice de morador inexistente."); //todo adicionar uma exceção de gente
+        if(firstByte > FakeFileLengths.morador-1){
+            throw new IndiceInexistenteException("índice de morador inexistente.");
         }
 
         reader.setCursor(firstByte);
