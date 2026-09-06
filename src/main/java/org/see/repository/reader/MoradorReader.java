@@ -13,6 +13,8 @@ import org.see.repository.writer.MoradorWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MoradorReader implements ReaderInterface<Morador> {
     private static BinFileReader reader = null;
@@ -31,6 +33,17 @@ public class MoradorReader implements ReaderInterface<Morador> {
             reader = new BinFileReader(f);
             StaticConfigObjects.fakeMoradorFileLength = reader.getLength();
         }
+    }
+
+    public List<Morador> readAll() throws IOException, PosicaoDeCursorInvalidaException, IllegalAccessException {
+        List<Morador> moradores = new ArrayList<>();
+        reader.setCursor(0); // volto para o início do arquivo
+        Morador m = readNext();
+        while(m!=null){
+            moradores.add(m);
+            m = readNext();
+        }
+        return moradores;
     }
 
     public Morador read(int index) throws Exception {
@@ -59,7 +72,7 @@ public class MoradorReader implements ReaderInterface<Morador> {
         }
     }
 
-    public Morador readNext() throws IOException, PosicaoDeCursorInvalidaException, StringMuitoLongaException, NullIndexException, IllegalAccessException {
+    public Morador readNext() throws IOException, PosicaoDeCursorInvalidaException, IllegalAccessException {
         if(reader.getCursor() == StaticConfigObjects.fakeMoradorFileLength){ // se cheguei no fim do arquivo
             return null;
         }
@@ -77,7 +90,11 @@ public class MoradorReader implements ReaderInterface<Morador> {
             }
             // não é o cara certo
             //escrever em ms
-            writer.writeBypassingCache(m);
+            try{
+                writer.writeBypassingCache(m);
+            }catch(NullIndexException|StringMuitoLongaException e){
+                e.printStackTrace(); // fiz só isso pq sei que não vai acontecer, isso já foi verificado antes
+            }
             m = new Morador(index, reader.readString(true, reader.getCursor(), StaticConfigObjects.maxMoradorNameLen), reader.readString(false, 0, StaticConfigObjects.maxEmailLen), reader.readBoolean());
             cache.write(m, false);
             return m;

@@ -42,14 +42,19 @@ public /*abstract*/ class Cache<T> extends ArrayList<CacheLine<T>> {
                 // não posso concluir nada sobre a modificação aqui, pode ser escrito na cache por um read ou um write
                 line.setElementNumber(value);
                 line.setElement(objeto);
-                //flusher.notify();
+                synchronized(flusher) {
+                	flusher.notify();
+                }
+                
                 return null;
             }else if(line.getElementNumber()==value){ // espero que faça unboxing automático
                 System.out.println("Cache hit");
                 //Quando eu escrevo por cima de um cara igual, é porque foi modificado.
                 line.setElement(objeto);
                 line.setModified(true);
-                //flusher.notify();
+                synchronized(flusher) {
+                	flusher.notify();
+                }                
                 return null;
             }else{ // último caso: Substituição. Retorno somente se ele precisar ser escrito em MS, ou seja, se m=1
                 System.out.println("Cache miss");
@@ -59,7 +64,9 @@ public /*abstract*/ class Cache<T> extends ArrayList<CacheLine<T>> {
                 }
                 line.setElementNumber(value);
                 line.setElement(objeto);
-                //flusher.notify();
+                synchronized(flusher) {
+                	flusher.notify();
+                }
                 return retorno;
             }
         }else{
