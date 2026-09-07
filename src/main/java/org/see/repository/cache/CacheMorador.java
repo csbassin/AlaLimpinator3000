@@ -1,7 +1,7 @@
 package org.see.repository.cache;
 
 import org.see.modelo.Morador;
-import org.see.repository.cache.flusher.CacheMoradorFlusher;
+import org.see.repository.cache.flusher.CacheFlusher;
 import org.see.repository.reader.MoradorReader;
 import org.see.repository.writer.MoradorWriter;
 
@@ -14,7 +14,7 @@ public class CacheMorador extends Cache<Morador>{
     private CacheMorador() throws IOException {
         super(new MoradorReader(), new MoradorWriter());
         try{
-            this.flusher = new CacheMoradorFlusher(this);
+            this.flusher = new CacheFlusher<>(this, new MoradorWriter());
             flusher.start();
         }catch(FileNotFoundException e){
             e.printStackTrace();

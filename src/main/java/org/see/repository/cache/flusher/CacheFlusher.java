@@ -11,7 +11,7 @@ public class CacheFlusher<T> extends Thread{
     private WriterInterface<T> writer;
     private boolean stop = false;
 
-    protected CacheFlusher(Cache<T> cache, WriterInterface<T> writer){
+    public CacheFlusher(Cache<T> cache, WriterInterface<T> writer){
         this.cache = cache;
         this.writer = writer;
     }

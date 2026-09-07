@@ -9,8 +9,7 @@ import org.see.repository.interfaces.ReaderInterface;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class MoradorReader implements ReaderInterface<Morador> {
     private static BinFileReader reader = null;
@@ -31,16 +30,6 @@ public class MoradorReader implements ReaderInterface<Morador> {
         }
     }
 
-    public List<Morador> readAll() throws IOException, PosicaoDeCursorInvalidaException, IllegalAccessException {
-        List<Morador> moradores = new ArrayList<>();
-        reader.setCursor(0); // volto para o início do arquivo
-        Morador m = readNext();
-        while(m!=null){
-            moradores.add(m);
-            m = readNext();
-        }
-        return moradores;
-    }
 
     public Morador read(int index) throws Exception {
         long firstByte = (long) index*(Morador.getMoradorSizeInBytes());

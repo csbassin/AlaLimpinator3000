@@ -19,18 +19,16 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 
-public /*abstract*/ class Cache<T> extends ArrayList<CacheLine<T>> {
+public class Cache<T> extends ArrayList<CacheLine<T>> {
 
     private static int cacheSize = 100;
 
     private ReaderInterface<T> rd;
-    //private WriterInterface<T> wr;
     protected CacheFlusher<T> flusher;
 
     protected Cache(ReaderInterface<T> rd, WriterInterface<T> wr){
         super(cacheSize); // caches podem armazenar até 100 itens por default
         this.rd = rd;
-        //this.wr = wr;
         for(int i = 0; i<cacheSize; i++){ // cria linhas de cache vazias
             this.add(new CacheLine<>());
         }

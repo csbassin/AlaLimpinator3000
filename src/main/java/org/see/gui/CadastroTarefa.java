@@ -9,9 +9,21 @@ import javax.swing.JSeparator;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
+import org.see.modelo.Morador;
+import org.see.service.MoradorService;
+import org.see.service.TarefaService;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 
 public class CadastroTarefa {
 
@@ -21,20 +33,43 @@ public class CadastroTarefa {
     private JTextField txtNome;
     private JLabel lblDescricao;
     private JTextField txtDescricao;
-//    private TarefaWriter tw;
+    private JCheckBox chckFixa;
+    private JComboBox cmbMorador;
+    
+    private TarefaService ts;
+    private MoradorService ms;
 
     public CadastroTarefa() {
-//        try {
-//            tw = new TarefaWriter();
-//        }catch(FileNotFoundException e) {
-//            e.printStackTrace();
-//            return;
-//        }
+    	try {
+    		ts = new TarefaService();
+    		ms = new MoradorService();
+    	}catch(Exception e) { // TODO tratar direito
+    		System.out.println(e.getMessage());
+    		return;
+    	}
+    	
         initialize();
     }
 
     private void initialize() {
         frame = new JFrame();
+        frame.addWindowListener(new WindowAdapter() {
+        	@Override
+        	public void windowOpened(WindowEvent e) {
+        		try {
+        			for(Morador m:ms.readAll()) {
+        				if(m.isAtivo()) {
+        					cmbMorador.addItem(m);
+        				}
+        			}
+        			
+        		}catch(Exception eq) {
+        			eq.printStackTrace();
+        			frame.dispose();
+        		}
+        		
+        	}
+        });
         frame.setTitle("Cadastro de Tarefa");
         frame.getContentPane().setFont(new Font("Noto Sans", Font.PLAIN, 14));
         frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -132,6 +167,37 @@ public class CadastroTarefa {
         springLayout.putConstraint(SpringLayout.EAST, txtDescricao, 0, SpringLayout.EAST, lblNewLabel);
         txtDescricao.setColumns(10);
         frame.getContentPane().add(txtDescricao);
+        
+        chckFixa = new JCheckBox("Fixa");
+        chckFixa.addItemListener(new ItemListener() {
+        	public void itemStateChanged(ItemEvent arg0) {
+        		if(arg0.getStateChange() == ItemEvent.SELECTED) {
+        			cmbMorador.setEnabled(true);
+        		}else {
+        			cmbMorador.setEnabled(false);
+        		}
+        	}
+        });
+        springLayout.putConstraint(SpringLayout.NORTH, chckFixa, 6, SpringLayout.SOUTH, txtDescricao);
+        springLayout.putConstraint(SpringLayout.WEST, chckFixa, 0, SpringLayout.WEST, lblNewLabel);
+        chckFixa.setForeground(Color.WHITE);
+        chckFixa.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+        chckFixa.setBackground(Color.DARK_GRAY);
+        frame.getContentPane().add(chckFixa);
+        
+        cmbMorador = new JComboBox();
+        cmbMorador.setEnabled(false);
+        springLayout.putConstraint(SpringLayout.WEST, cmbMorador, 0, SpringLayout.WEST, lblNewLabel);
+        springLayout.putConstraint(SpringLayout.EAST, cmbMorador, 0, SpringLayout.EAST, txtDescricao);
+        frame.getContentPane().add(cmbMorador);
+        
+        JLabel lblMorador = new JLabel("Morador Responsável:");
+        springLayout.putConstraint(SpringLayout.NORTH, lblMorador, 4, SpringLayout.SOUTH, chckFixa);
+        springLayout.putConstraint(SpringLayout.NORTH, cmbMorador, 6, SpringLayout.SOUTH, lblMorador);
+        springLayout.putConstraint(SpringLayout.WEST, lblMorador, 0, SpringLayout.WEST, lblNewLabel);
+        lblMorador.setForeground(Color.WHITE);
+        lblMorador.setFont(new Font("Noto Sans", Font.PLAIN, 14));
+        frame.getContentPane().add(lblMorador);
 
         visible();
     }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 
 public class BinFileReader {
     private RandomAccessFile raf;
@@ -22,6 +23,18 @@ public class BinFileReader {
             return false;
         }
         return true;
+    }
+
+    public int readInt() throws IOException {
+        return ByteBuffer.allocate(4).put(readBytes(4)).position(0).getInt();
+    }
+
+    public byte[] readBytes(int n) throws IOException {
+        byte[] bytes = new byte[n];
+        for(int i = 0; i<n; i++){
+            bytes[i] = raf.readByte();
+        }
+        return bytes;
     }
 
     public long getCursor() throws IOException {

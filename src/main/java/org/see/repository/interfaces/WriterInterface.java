@@ -6,7 +6,6 @@ import org.see.exception.StringMuitoLongaException;
 import java.io.IOException;
 
 public interface WriterInterface<T> {
-    //void genericWrite(T obj) throws StringMuitoLongaException, IOException;
     void write(T obj) throws IOException, StringMuitoLongaException;
     void update(T obj) throws NullIndexException, IOException, StringMuitoLongaException;
 }

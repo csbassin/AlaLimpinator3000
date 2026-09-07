@@ -1,6 +1,5 @@
 package org.see.modelo;
 
-import org.see.annotation.FakeSize;
 import org.see.annotation.GetIndex;
 import org.see.annotation.GetSize;
 import org.see.annotation.Index;
