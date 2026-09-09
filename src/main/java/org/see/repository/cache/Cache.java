@@ -1,18 +1,15 @@
 package org.see.repository.cache;
 
 import org.see.annotation.FakeSize;
-import org.see.annotation.GetIndex;
 import org.see.annotation.GetSize;
 import org.see.annotation.Index;
 import org.see.config.FakeFileLengths;
 import org.see.exception.IndiceInexistenteException;
-import org.see.exception.NullIndexException;
 import org.see.exception.SemAnotacaoIndexException;
-import org.see.exception.StringMuitoLongaException;
 import org.see.repository.cache.flusher.CacheFlusher;
 import org.see.repository.interfaces.ReaderInterface;
 import org.see.repository.interfaces.WriterInterface;
-import java.io.IOException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -58,24 +55,16 @@ public class Cache<T> extends ArrayList<CacheLine<T>> {
                 }
             }
         }
-        // localizar getIndex
-        Method getIndex = null;
+        // localizar getSize
         Method getSize = null;
         for(Method m:objeto.getClass().getDeclaredMethods()){
-            if(m.isAnnotationPresent(GetIndex.class)){
-                getIndex = m;
-                if(getSize!=null){
-                    break;
-                }
-            }else if(m.isAnnotationPresent(GetSize.class)){
+           if(m.isAnnotationPresent(GetSize.class)){
                 getSize = m;
-                if(getIndex!=null){
-                    break;
-                }
+                break;
             }
         }
-        if(fieldIndex==null || fieldFakeSize == null || getIndex == null || getSize == null){
-            throw new SemAnotacaoIndexException("Falta um @Index, @FakeSize, @GetIndex ou @GetSize.");
+        if(fieldIndex==null || fieldFakeSize == null || getSize == null){
+            throw new SemAnotacaoIndexException("Falta um @Index, @FakeSize ou @GetSize.");
         }
 
         Integer valueIndex = (Integer) fieldIndex.get(objeto);
@@ -84,10 +73,10 @@ public class Cache<T> extends ArrayList<CacheLine<T>> {
 
         try{
             if(valueIndex == null){ // Objeto ainda não está presente em ms
-                valueIndex = (int) getIndex.invoke(objeto);
-                valueFakeSize += (int) getSize.invoke(objeto);
+                int size = (int) getSize.invoke(objeto);
+                valueIndex = (int) valueFakeSize/size;
+                valueFakeSize += size;
                 fieldIndex.set(objeto, valueIndex);
-                //wr.write(objeto);
                 fieldFakeSize.set(FakeFileLengths.class, valueFakeSize);
             }
         }catch(InvocationTargetException e){

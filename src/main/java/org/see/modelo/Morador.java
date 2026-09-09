@@ -1,6 +1,5 @@
 package org.see.modelo;
 
-import org.see.annotation.GetIndex;
 import org.see.annotation.GetSize;
 import org.see.annotation.Index;
 import org.see.config.FakeFileLengths;
@@ -29,11 +28,6 @@ public class Morador {
 
     public Integer getIndex() {
         return index;
-    }
-    @GetIndex
-    public static int getFileIndex(){
-        System.out.println("fui chamado");
-        return (int) FakeFileLengths.morador/getMoradorSizeInBytes();
     }
 
     public boolean isAtivo() {

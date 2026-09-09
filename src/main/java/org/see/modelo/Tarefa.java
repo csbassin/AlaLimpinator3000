@@ -1,6 +1,5 @@
 package org.see.modelo;
 
-import org.see.annotation.GetIndex;
 import org.see.annotation.GetSize;
 import org.see.annotation.Index;
 import org.see.config.FakeFileLengths;
@@ -30,11 +29,7 @@ public class Tarefa {
     public static int getTarefaSizeInBytes(){
         return StaticConfigObjects.MAX_TAREFA_DESCRICAO_LEN+StaticConfigObjects.MAX_TAREFA_NAME_LEN+5; //1 byte vai dizer se é Fixa ou não, 4 bytes representam o index do morador
     }
-    @GetIndex
-    public static int getFileIndex(){
-        System.out.println("fui chamado");
-        return (int) FakeFileLengths.tarefa/getTarefaSizeInBytes();
-    }
+
     public Integer getNumero() {
         return numero;
     }
