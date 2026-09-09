@@ -1,13 +1,19 @@
 package org.see.service;
 
+import org.see.config.FakeFileLengths;
+import org.see.exception.NaoHaMaisTarefasException;
 import org.see.exception.TarefaJaCadastrada;
+import org.see.exception.TodasAsTarefasSaoFixasException;
 import org.see.modelo.Tarefa;
 import org.see.repository.cache.CacheTarefa;
 import org.see.service.interfaces.Service;
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TarefaService extends Service<Tarefa> {
+    private static List<Integer> exclusionList = new ArrayList<>();
 
     public TarefaService() throws IOException {
         cache = CacheTarefa.getCacheTarefa();
@@ -15,7 +21,7 @@ public class TarefaService extends Service<Tarefa> {
 
     public void cadastrar(Tarefa tarefa) throws Exception {
         if(findByNome(tarefa.getNome())!=null){
-            throw new TarefaJaCadastrada("Esta tarefa jpa existe. Cadastre uma tarefa com outro nome.");
+            throw new TarefaJaCadastrada("Esta tarefa já existe. Cadastre uma tarefa com outro nome.");
         }
         cache.write(tarefa);
     }
@@ -27,6 +33,37 @@ public class TarefaService extends Service<Tarefa> {
             }
         }
         return null;
+    }
+    public List<Tarefa> readNaoFixas() throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        for(int i=0; i<(int) (FakeFileLengths.tarefa/Tarefa.getTarefaSizeInBytes()); i++){
+            Tarefa t = read(i);
+            if(t.getMoradorAssociado()==null){
+                tarefas.add(t);
+            }
+        }
+        return tarefas;
+    }
+    public Tarefa readRandom() throws Exception { //usar para o sorteio
+        List<Tarefa> disponiveis = readNaoFixas();
+        if(disponiveis.isEmpty()){
+            throw new TodasAsTarefasSaoFixasException("Não é possível sortear porque todas as tarefas são fixas.");
+        }
+        Integer listaIndex = null;
+        boolean acabou = false;
+        do{
+            if(exclusionList.size() == disponiveis.size()){
+                acabou = true;
+            }else{
+                listaIndex = ThreadLocalRandom.current().nextInt(0, disponiveis.size());
+            }
+        }while(exclusionList.contains(listaIndex) && !acabou);
+        exclusionList.add(listaIndex); // para não sortear duas vezes a mesma tarefa
+        if(acabou){
+            exclusionList.clear(); // limpo a lista de exclusões
+            throw new NaoHaMaisTarefasException("Acabaram as tarefas.");
+        }
+        return disponiveis.get(listaIndex);
     }
 
 

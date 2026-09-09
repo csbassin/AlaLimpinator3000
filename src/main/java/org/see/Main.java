@@ -1,5 +1,6 @@
 package org.see;
 
+import org.see.exception.NaoHaMaisTarefasException;
 import org.see.modelo.Morador;
 
 import org.see.modelo.Tarefa;
@@ -31,11 +32,20 @@ public class Main {
             Morador m = ms.findByEmail("cauabassin@outlook.com");
             System.out.println("Morador de email "+m.getEmail()+" é "+m.getNome());
 
-            ts.cadastrar(new Tarefa("Chão do banheiro grande", "Limpar o chão do banheiro grande, incluindo os boxes."));
+            //ts.cadastrar(new Tarefa("Chão do banheiro grande", "Limpar o chão do banheiro grande, incluindo os boxes."));
             System.out.println("Tarefa: "+ts.findByNome("Chão do banheiro grande").getDescricao());
-            ts.cadastrar(new Tarefa("Chão da cozinha", "Lavar chão da cozinha. De preferência, arraste as geladeiras", m));
+            //ts.cadastrar(new Tarefa("Chão da cozinha", "Lavar chão da cozinha. De preferência, arraste as geladeiras", m));
             Tarefa t = ts.findByNome("Chão da cozinha");
             System.out.println("Tarefa: "+t.getDescricao() + " pertence à "+t.getMoradorAssociado().getNome());
+            //ts.cadastrar(new Tarefa("Lixeiras", "Esvaziar e lavar as lixeiras."));
+            t = ts.readRandom();
+            System.out.println(t.getDescricao());
+            try{
+                t = ts.readRandom();
+                System.out.println(t.getDescricao());
+            }catch(NaoHaMaisTarefasException e){
+                System.out.println(e.getMessage());
+            }
         }catch(Exception e) {
             e.printStackTrace();
             System.out.println("teste falhou");
