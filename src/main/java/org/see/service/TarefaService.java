@@ -66,5 +66,11 @@ public class TarefaService extends Service<Tarefa> {
         return disponiveis.get(listaIndex);
     }
 
+    public int getSizeDisponivel() throws Exception {
+        List<Tarefa> tarefas = new ArrayList<>();
+        tarefas = readNaoFixas();
+        return tarefas.size();
+    }
+
 
 }

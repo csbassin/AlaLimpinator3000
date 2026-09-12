@@ -51,13 +51,13 @@ public class MainWindow {
 				
 			}
 		});
-		frame.setTitle("Combate à porcaria: Por Cauã Bassin e Eric Maia Dias");
+		frame.setTitle("AlaLimpinator3000™");
 		frame.getContentPane().setFont(new Font("Noto Sans", Font.PLAIN, 14));
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		SpringLayout springLayout = new SpringLayout();
 		frame.getContentPane().setLayout(springLayout);
 
-		JLabel lblNewLabel = new JLabel("AlaLimpinator3000");
+		JLabel lblNewLabel = new JLabel("Combate à porcaria");
 		springLayout.putConstraint(SpringLayout.NORTH, lblNewLabel, 0, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 10, SpringLayout.WEST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, 30, SpringLayout.NORTH, frame.getContentPane());
@@ -121,7 +121,46 @@ public class MainWindow {
 		btnListarMoradores.setBorder(new LineBorder(Color.WHITE, 2));
 		frame.getContentPane().add(btnListarMoradores);
 
+		JButton btnListarTarefas = new JButton("Visualizar Tarefas Cadastradas");
+		btnListarTarefas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ListagemTarefa();
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, btnListarTarefas, 6, SpringLayout.SOUTH, btnListarMoradores);
+		springLayout.putConstraint(SpringLayout.WEST, btnListarTarefas, 0, SpringLayout.WEST, btnListarMoradores);
+		springLayout.putConstraint(SpringLayout.EAST, btnListarTarefas, 0, SpringLayout.EAST, btnListarMoradores);
+		btnListarTarefas.setForeground(Color.WHITE);
+		btnListarTarefas.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		btnListarTarefas.setContentAreaFilled(false);
+		btnListarTarefas.setBorder(new LineBorder(Color.WHITE, 2));
+		frame.getContentPane().add(btnListarTarefas);
+
+		JButton btnSortearTarefas = new JButton("Gerar escala de limpeza");
+		btnSortearTarefas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new SorteioTarefas();
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, btnSortearTarefas, 6, SpringLayout.SOUTH, btnListarTarefas);
+		springLayout.putConstraint(SpringLayout.WEST, btnSortearTarefas, 0, SpringLayout.WEST, btnListarTarefas);
+		springLayout.putConstraint(SpringLayout.EAST, btnSortearTarefas, 0, SpringLayout.EAST, btnListarTarefas);
+		btnSortearTarefas.setForeground(Color.WHITE);
+		btnSortearTarefas.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		btnSortearTarefas.setContentAreaFilled(false);
+		btnSortearTarefas.setBorder(new LineBorder(Color.WHITE, 2));
+		frame.getContentPane().add(btnSortearTarefas);
+
+		JLabel lblCreditos = new JLabel("<html>Por Cauã Bassin e Eric Maia<br>feat: Luiz Eduardo<html>");
+		lblCreditos.setForeground(Color.WHITE);
+		lblCreditos.setFont(new Font("Noto Sans", Font.PLAIN, 15));
+		springLayout.putConstraint(SpringLayout.SOUTH, lblCreditos, -5, SpringLayout.SOUTH, frame.getContentPane());
+		springLayout.putConstraint(SpringLayout.EAST, lblCreditos, -10, SpringLayout.EAST, frame.getContentPane());
+
+		frame.getContentPane().add(lblCreditos);
+
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 	}
 }
