@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
 import org.see.modelo.Morador;
+import org.see.modelo.Tarefa;
 import org.see.service.MoradorService;
 import org.see.service.TarefaService;
 
@@ -43,7 +44,7 @@ public class CadastroTarefa {
     	try {
     		ts = new TarefaService();
     		ms = new MoradorService();
-    	}catch(Exception e) { // TODO tratar direito
+    	}catch(Exception e) { // TODO tratar direito // seria legal tratar direito... mas precisa?
     		System.out.println(e.getMessage());
     		return;
     	}
@@ -101,13 +102,18 @@ public class CadastroTarefa {
             public void actionPerformed(ActionEvent e) {
                 String nome = txtNome.getText();
                 String descicao = txtDescricao.getText();
+                Morador morador = null;
+
+                if(chckFixa.isSelected()) {
+                    morador = (Morador) cmbMorador.getSelectedItem();
+                }
 
                 if(!nome.trim().isEmpty() && !descicao.trim().isEmpty()) {
-//                    try {
-//                        tw.write(new Tarefa(nome, descicao, numero));
-//                    }catch(Exception e2) {
-//                        e2.printStackTrace();
-//                    }
+                    try {
+                        ts.cadastrar(new Tarefa(nome, descicao, morador));
+                    }catch(Exception e2) {
+                        e2.printStackTrace();
+                    }
                     System.out.println("Tentou salvar!"); // Apenas para teste
                 }else{
                     System.out.println("Criar janelas de erro - Campos vazios");
