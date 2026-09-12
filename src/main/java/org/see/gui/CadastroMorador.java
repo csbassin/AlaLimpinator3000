@@ -1,14 +1,11 @@
 package org.see.gui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.SpringLayout;
-import javax.swing.JSeparator;
-import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
+import org.see.exception.EmailJaCadastradoException;
 import org.see.modelo.Morador;
 import org.see.repository.writer.MoradorWriter;
 import org.see.service.MoradorService;
@@ -17,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
-import javax.swing.JTextField;
-import javax.swing.JCheckBox;
 
 public class CadastroMorador {
 
@@ -78,11 +73,17 @@ public class CadastroMorador {
 				if(!nome.trim().isEmpty() && !email.trim().isEmpty()) {
 					try {
 						ms.cadastrar(new Morador(nome, email, ativo));
-					}catch(Exception e2) {
-						e2.printStackTrace();
+						txtNome.setText("");
+						txtEmail.setText("");
+						chckAtivo.setSelected(true);
+						JOptionPane.showMessageDialog(null, "Morador cadastrado com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+					}catch(EmailJaCadastradoException e2) {
+						JOptionPane.showMessageDialog(null, e2.getMessage(), "E-mail em uso", JOptionPane.ERROR_MESSAGE);
+					}catch(Exception e3){
+						JOptionPane.showMessageDialog(null, e3.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
 					}
 				}else{
-					System.out.println("Criar janelas de erro");
+					JOptionPane.showMessageDialog(null, "Há campos obrigatórios vazios. Preencha-os antes de continuar.", "Campos vazios", JOptionPane.WARNING_MESSAGE);
 				}
 				
 			}
@@ -144,6 +145,7 @@ public class CadastroMorador {
 		frame.getContentPane().add(txtEmail);
 		
 		chckAtivo = new JCheckBox("Ativo");
+		chckAtivo.setSelected(true);
 		springLayout.putConstraint(SpringLayout.NORTH, chckAtivo, 6, SpringLayout.SOUTH, txtEmail);
 		springLayout.putConstraint(SpringLayout.WEST, chckAtivo, 0, SpringLayout.WEST, lblNewLabel);
 		chckAtivo.setForeground(Color.WHITE);

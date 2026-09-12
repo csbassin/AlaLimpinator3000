@@ -1,14 +1,12 @@
 package org.see.gui;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.SpringLayout;
-import javax.swing.JSeparator;
-import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 
+import org.see.exception.EmailJaCadastradoException;
+import org.see.exception.TarefaJaCadastrada;
 import org.see.modelo.Morador;
 import org.see.modelo.Tarefa;
 import org.see.service.MoradorService;
@@ -16,9 +14,6 @@ import org.see.service.TarefaService;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JTextField;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
@@ -45,7 +40,7 @@ public class CadastroTarefa {
     		ts = new TarefaService();
     		ms = new MoradorService();
     	}catch(Exception e) { // TODO tratar direito // seria legal tratar direito... mas precisa?
-    		System.out.println(e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
     		return;
     	}
     	
@@ -63,7 +58,7 @@ public class CadastroTarefa {
         			}
         			
         		}catch(Exception eq) {
-        			eq.printStackTrace();
+                    JOptionPane.showMessageDialog(null, eq.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
         			frame.dispose();
         		}
         		
@@ -109,13 +104,17 @@ public class CadastroTarefa {
                 if(!nome.trim().isEmpty() && !descicao.trim().isEmpty()) {
                     try {
                         ts.cadastrar(new Tarefa(nome, descicao, morador));
-                    }catch(Exception e2) {
-                        e2.printStackTrace();
+                        chckFixa.setSelected(false);
+                        txtDescricao.setText("");
+                        txtNome.setText("");
+                        JOptionPane.showMessageDialog(null, "Tarefa cadastrada com sucesso.", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                    }catch(TarefaJaCadastrada e2) {
+                        JOptionPane.showMessageDialog(null, e2.getMessage(), "Tarefa já cadastrada.", JOptionPane.ERROR_MESSAGE);
+                    }catch(Exception e3){
+                        JOptionPane.showMessageDialog(null, e3.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
                     }
-                    System.out.println("Tentou salvar!"); // Apenas para teste
                 }else{
-                    System.out.println("Criar janelas de erro - Campos vazios");
-                }
+                    JOptionPane.showMessageDialog(null, "Algum campo obrigatório está vazio. Preencha antes de continuar.", "Preencha", JOptionPane.WARNING_MESSAGE);                }
             }
         });
         springLayout.putConstraint(SpringLayout.NORTH, btnSalvar, -45, SpringLayout.SOUTH, frame.getContentPane());

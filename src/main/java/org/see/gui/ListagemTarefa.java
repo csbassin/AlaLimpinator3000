@@ -89,6 +89,9 @@ public class ListagemTarefa {
         frame.getContentPane().add(scrollPane);
 
         table = new JTable(dtm);
+        table.setRowHeight(40);
+        table.getColumnModel().getColumn(1).setCellRenderer(new MultiLineCellRenderer());
+        table.getColumnModel().getColumn(2).setCellRenderer(new MultiLineCellRenderer());
         scrollPane.setViewportView(table);
         frame.setBounds(100, 100, 640, 480);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

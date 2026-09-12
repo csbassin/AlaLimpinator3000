@@ -8,6 +8,7 @@ import org.see.modelo.Tarefa;
 import org.see.service.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.io.*;
 import java.util.*;
@@ -69,6 +70,7 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().setFont(new Font("Noto Sans", Font.PLAIN, 14));
         frame.getContentPane().setBackground(Color.DARK_GRAY);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
 
         SpringLayout springLayout = new SpringLayout();
         frame.getContentPane().setLayout(springLayout);
@@ -97,6 +99,15 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
         frame.getContentPane().add(scrollPane);
 
         table = new JTable(dtm);
+        table.setRowHeight(40);
+        for(int i = 0; i<table.getColumnModel().getColumnCount(); i++){
+            TableColumn coluna =  table.getColumnModel().getColumn(i);
+            if(i==3){
+               coluna.setPreferredWidth(30);
+               coluna.setResizable(false);
+            }
+            table.getColumnModel().getColumn(i).setCellRenderer(new MultiLineCellRenderer());
+        }
         scrollPane.setViewportView(table);
         visible();
     }

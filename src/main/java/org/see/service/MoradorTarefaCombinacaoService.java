@@ -23,6 +23,7 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
     }
 
     // não posso registrar a mesma tarefa na mesma data, mesmo que para dois moradores, já que a mesma tarefa não vai ser feita duas vezes
+    //todo para cadastrar outro sorteio, a data limite precisa ter passado
     public void cadastrar(MoradorTarefaCombinacao mtc) throws Exception {
         if(findByTarefaEDataAssociacao(mtc.getTarefa(), mtc.getDataHoraAssociacao())!=null){ // se já atribuí essa tarefa nessa data
             throw new TarefaJaAssociadaException("A tarefa "+mtc.getTarefa().getNome()+" já foi associada a um morador em "+ Miscelaneous.formatDate(mtc.getDataHoraAssociacao().toLocalDate()));
