@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class BinFileWriter implements AutoCloseable {
     private ByteArrayOutputStream buffer;
@@ -41,20 +42,15 @@ public class BinFileWriter implements AutoCloseable {
     }
 
     public void writeData(LocalDate data){
-        int[] formatted = Miscelaneous.dateToArray(data);
+        /*int[] formatted = Miscelaneous.dateToArray(data);
         buffer.write((byte)formatted[0]);
         buffer.write((byte)formatted[1]);
-        writeInt(formatted[2]);
+        writeInt(formatted[2]);*/
+        writeLong(data.toEpochDay());
     }
 
     public void writeDateTime(LocalDateTime dateTime){
-        int[] formatted = Miscelaneous.dateTimeToArray(dateTime);
-        buffer.write((byte)formatted[0]);
-        buffer.write((byte)formatted[1]);
-        writeInt(formatted[2]);
-        writeByte((byte)formatted[3]);
-        writeByte((byte)formatted[4]);
-        writeByte((byte)formatted[5]);
+        writeLong(dateTime.atZone(ZoneId.systemDefault()).toEpochSecond());
     }
 
     public void writeLong(long value) {

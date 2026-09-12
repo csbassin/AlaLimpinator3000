@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.time.*;
 
 public class BinFileReader {
     private RandomAccessFile raf;
@@ -24,7 +25,12 @@ public class BinFileReader {
         }
         return true;
     }
-
+    public LocalDate readLocalDate() throws IOException {
+        return LocalDate.ofEpochDay(ByteBuffer.allocate(8).put(readBytes(8)).position(0).getLong());
+    }
+    public LocalDateTime readLocalDateTime() throws IOException {
+        return LocalDateTime.ofEpochSecond(ByteBuffer.allocate(8).put(readBytes(8)).position(0).getLong(), 0, ZoneId.of("America/Sao_Paulo").getRules().getOffset(Instant.now()));
+    }
     public int readInt() throws IOException {
         return ByteBuffer.allocate(4).put(readBytes(4)).position(0).getInt();
     }
