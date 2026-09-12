@@ -22,6 +22,15 @@ public class Tarefa {
         this.moradorAssociado = morador;
     }
 
+    @Override
+    public boolean equals(Object obj){
+        return numero.equals(((Tarefa)obj).getNumero());
+    }
+
+    public boolean isFixa(){
+        return moradorAssociado!=null;
+    }
+
     public String getNome() {
         return nome;
     }

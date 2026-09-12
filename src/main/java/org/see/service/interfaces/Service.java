@@ -1,6 +1,8 @@
 package org.see.service.interfaces;
 
 import org.see.repository.cache.Cache;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +14,7 @@ public abstract class Service<T> {
     }
 
     public List<T> readAll() throws Exception{
+        System.out.println("Chamei readAll");
         int index = 0;
         List<T> objetos = new ArrayList<>();
         T objeto = cache.read(index++);
@@ -20,6 +23,10 @@ public abstract class Service<T> {
             objeto = cache.read(index++);
         }
         return objetos;
+    }
+
+    public int getQuantidade() throws IOException {
+        return cache.getQuantidadeElementos();
     }
 
     public abstract void cadastrar(T obj) throws Exception;

@@ -17,7 +17,7 @@ public class CacheTarefa extends Cache<Tarefa>{
         flusher.start();
     }
 
-    public static CacheTarefa getCacheTarefa() throws IOException {
+    public static CacheTarefa getCache() throws IOException {
         if(cache == null){
             cache = new CacheTarefa();
         }

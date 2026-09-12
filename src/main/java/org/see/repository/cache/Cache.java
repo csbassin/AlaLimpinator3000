@@ -10,6 +10,7 @@ import org.see.repository.cache.flusher.CacheFlusher;
 import org.see.repository.interfaces.ReaderInterface;
 import org.see.repository.interfaces.WriterInterface;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -89,14 +90,14 @@ public class Cache<T> extends ArrayList<CacheLine<T>> {
         // três casos: é null, é o mesmo número, é número diferente. O último representa uma substituição
         line.setModified(true);
         if(line.getElement() == null){
-            System.out.println("Cache miss");
+            //System.out.println("Cache miss");
             line.setElementNumber(valueIndex);
             line.setElement(objeto);
         }else if(line.getElementNumber()==valueIndex){ // espero que faça unboxing automático
-            System.out.println("Cache hit");
+            //System.out.println("Cache hit");
             line.setElement(objeto);
         }else{
-            System.out.println("Cache miss");
+            //System.out.println("Cache miss");
             /*if(line.isModified()){ // ele precisa escrever o cara que vai sair
                 wr.update(line.getElement());
             }*/
@@ -114,10 +115,10 @@ public class Cache<T> extends ArrayList<CacheLine<T>> {
         T retorno = null;
 
         if(line.getElement() != null && line.getElementNumber()==index){
-            System.out.println("Cache hit");
+            //System.out.println("Cache hit");
             retorno = line.getElement();
         }else{
-            System.out.println("Cache miss");
+            //System.out.println("Cache miss");
             try{
                 retorno = rd.read(index);
                 this.get(posicao).setElementNumber(index);
@@ -133,6 +134,9 @@ public class Cache<T> extends ArrayList<CacheLine<T>> {
         return retorno;
     }
 
+    public int getQuantidadeElementos() throws IOException {
+        return rd.getQuantidadeElementos();
+    }
 
     private int calculaPosicao(int index) {
         return index%cacheSize;

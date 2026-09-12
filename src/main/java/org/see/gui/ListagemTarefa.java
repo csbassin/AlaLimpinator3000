@@ -98,7 +98,7 @@ public class ListagemTarefa {
 
     private void addToTable(Tarefa tarefa) {
         dtm.addRow(new String[]{tarefa.getNome(), tarefa.getDescricao(),
-                tarefa.getMoradorAssociado() != null ? tarefa.getMoradorAssociado().getNome() : "ninguém"});
+                tarefa.getMoradorAssociado() != null ? tarefa.getMoradorAssociado().getNome() : ""});
     }
 
     private void visible() {

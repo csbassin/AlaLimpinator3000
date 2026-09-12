@@ -45,20 +45,11 @@ public class MoradorReader implements ReaderInterface<Morador> {
         return new Morador(index, nome, email, ativo);
     }
 
-    public Morador readNext() throws IOException, PosicaoDeCursorInvalidaException, IllegalAccessException {
-        if(reader.getCursor() == FakeFileLengths.morador){ // se cheguei no fim do arquivo
-            return null;
-        }
-        if(reader.getCursor()%Morador.getMoradorSizeInBytes()!=0){ // calculando se o cursor está no início de um morador
-            throw new PosicaoDeCursorInvalidaException("O cursor não aponta para o início de um morador.");
-        }
-
-        int index = (int) reader.getCursor()/Morador.getMoradorSizeInBytes();
-        String nome = reader.readString(true, reader.getCursor(), StaticConfigObjects.MAX_MORADOR_NAME_LEN);
-        String email = reader.readString(false, 0, StaticConfigObjects.MAX_EMAIL_LEN);
-        boolean ativo = reader.readBoolean();
-        return new Morador(index, nome, email, ativo);
+    @Override
+    public int getQuantidadeElementos() throws IOException {
+        return (int) reader.getLength()/Morador.getMoradorSizeInBytes();
     }
+
 
     public void close() throws IOException {
         reader.close();

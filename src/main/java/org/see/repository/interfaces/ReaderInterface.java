@@ -8,6 +8,6 @@ import java.io.IOException;
 
 public interface ReaderInterface<T> {
     T read(int index) throws Exception;
-    T readNext() throws IOException, PosicaoDeCursorInvalidaException, StringMuitoLongaException, NullIndexException, IllegalAccessException;
+    int getQuantidadeElementos() throws IOException;
     void close() throws IOException;
 }

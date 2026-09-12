@@ -6,6 +6,6 @@ import org.see.exception.StringMuitoLongaException;
 import java.io.IOException;
 
 public interface WriterInterface<T> {
-    void write(T obj) throws IOException, StringMuitoLongaException;
-    void update(T obj) throws NullIndexException, IOException, StringMuitoLongaException;
+    void write(T obj) throws Exception;
+    void update(T obj) throws Exception;
 }

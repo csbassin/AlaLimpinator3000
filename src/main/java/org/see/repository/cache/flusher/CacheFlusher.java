@@ -31,7 +31,7 @@ public class CacheFlusher<T> extends Thread{
                 synchronized (this){
                     wait();
                 }
-                for(CacheLine line:cache){
+                for(CacheLine<T> line:cache){
                     if(line.isModified()){
                         System.out.println("Encontrei dado que precisa de flushing.");
                         try{

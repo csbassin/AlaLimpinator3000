@@ -2,7 +2,6 @@ package org.see.modelo;
 
 import org.see.annotation.GetSize;
 import org.see.annotation.Index;
-import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
 import org.see.exception.StringMuitoLongaException;
 
@@ -28,6 +27,10 @@ public class Morador {
 
     public Integer getIndex() {
         return index;
+    }
+    @Override
+    public boolean equals(Object obj){
+        return index.equals(((Morador)obj).getIndex());
     }
 
     public boolean isAtivo() {

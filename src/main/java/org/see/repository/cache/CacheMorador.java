@@ -21,7 +21,7 @@ public class CacheMorador extends Cache<Morador>{
         }
     }
 
-    public static CacheMorador getCacheMorador() throws IOException {
+    public static CacheMorador getCache() throws IOException {
         if(cache == null){
             cache = new CacheMorador();
         }

@@ -10,4 +10,5 @@ public class StaticConfigObjects {
     public static final int MAX_EMAIL_LEN = 100;
     public static final int MAX_TAREFA_NAME_LEN = 30;
     public static final int MAX_TAREFA_DESCRICAO_LEN = 300;
+    public static final int PRAZO_REALIZACAO_TAREFA_DIAS = 7;
 }

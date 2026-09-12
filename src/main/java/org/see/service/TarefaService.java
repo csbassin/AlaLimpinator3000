@@ -4,6 +4,7 @@ import org.see.config.FakeFileLengths;
 import org.see.exception.NaoHaMaisTarefasException;
 import org.see.exception.TarefaJaCadastrada;
 import org.see.exception.TodasAsTarefasSaoFixasException;
+import org.see.modelo.Morador;
 import org.see.modelo.Tarefa;
 import org.see.repository.cache.CacheTarefa;
 import org.see.service.interfaces.Service;
@@ -16,7 +17,7 @@ public class TarefaService extends Service<Tarefa> {
     private static List<Integer> exclusionList = new ArrayList<>();
 
     public TarefaService() throws IOException {
-        cache = CacheTarefa.getCacheTarefa();
+        cache = CacheTarefa.getCache();
     }
 
     public void cadastrar(Tarefa tarefa) throws Exception {
@@ -36,7 +37,7 @@ public class TarefaService extends Service<Tarefa> {
     }
     public List<Tarefa> readNaoFixas() throws Exception {
         List<Tarefa> tarefas = new ArrayList<>();
-        for(int i=0; i<(int) (FakeFileLengths.tarefa/Tarefa.getTarefaSizeInBytes()); i++){
+        for(int i=0; i<getQuantidade(); i++){
             Tarefa t = read(i);
             if(t.getMoradorAssociado()==null){
                 tarefas.add(t);
@@ -44,6 +45,22 @@ public class TarefaService extends Service<Tarefa> {
         }
         return tarefas;
     }
+    public void resetSorteio(){
+        exclusionList.clear();
+    }
+
+    public List<Tarefa> getTarefasFixasAssociadas(Morador m) throws Exception {
+        List<Tarefa> fixas = new ArrayList<>();
+        for(int i = 0; i<getQuantidade(); i++){
+            Tarefa t = read(i);
+            Morador associado = t.getMoradorAssociado();
+            if(associado!=null && associado.equals(m)){ // se é o mesmo morador
+                fixas.add(t);
+            }
+        }
+        return fixas;
+    }
+
     public Tarefa readRandom() throws Exception { //usar para o sorteio
         List<Tarefa> disponiveis = readNaoFixas();
         if(disponiveis.isEmpty()){
@@ -65,12 +82,5 @@ public class TarefaService extends Service<Tarefa> {
         }
         return disponiveis.get(listaIndex);
     }
-
-    public int getSizeDisponivel() throws Exception {
-        List<Tarefa> tarefas = new ArrayList<>();
-        tarefas = readNaoFixas();
-        return tarefas.size();
-    }
-
 
 }

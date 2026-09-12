@@ -56,8 +56,8 @@ public class TarefaReader implements ReaderInterface<Tarefa> {
     }
 
     @Override
-    public Tarefa readNext() throws IOException, PosicaoDeCursorInvalidaException, StringMuitoLongaException, NullIndexException, IllegalAccessException {
-        return null;
+    public int getQuantidadeElementos() throws IOException {
+        return (int)reader.getLength()/Tarefa.getTarefaSizeInBytes();
     }
 
     @Override

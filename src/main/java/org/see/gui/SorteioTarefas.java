@@ -1,16 +1,14 @@
 package org.see.gui;
 
 
-import org.see.exception.NaoHaMaisTarefasException;
+import org.see.Miscelaneous;
 import org.see.modelo.Morador;
+import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Tarefa;
 import org.see.service.*;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.io.*;
 import java.util.*;
 import java.util.List;
@@ -19,78 +17,49 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
     private JFrame frame;
     private JTable table;
     private JScrollPane scrollPane;
-    private Map<Morador, List<Tarefa>> escala = new HashMap<Morador, List<Tarefa>>();
     private TarefaService ts;
     private MoradorService ms;
-    private String[] title = {"Morador", "Tarefa", "Descrição"};
+    private MoradorTarefaCombinacaoService mtcs;
+    private String[] title = {"Morador", "Tarefa", "Descrição", "Fixa", "Data e Hora do sorteio", "Data limite"};
     private DefaultTableModel dtm = new DefaultTableModel(title, 0);
-//    private Random rand = new Random();
 
     public SorteioTarefas() {
         try {
             ts = new TarefaService();
             ms = new MoradorService();
+            mtcs = new MoradorTarefaCombinacaoService();
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return;
         }
-
-        tarefaAleatorinator();
-        tabelaPreenchinator();
+        long start = System.currentTimeMillis();
+        tabelaPreenchinator(tarefaAleatorinator());
         initialize();
+        System.out.println("Elapsed Time: "+(System.currentTimeMillis()-start)+"ms");
     }
 
-    public Map<Morador, List<Tarefa>> tarefaAleatorinator() {
-        try {
-            List<Morador> moradores = ms.readAll();
-
-            for (Morador morador : moradores) {
-                if (morador.isAtivo()) {
-                    escala.put(morador, new ArrayList<>());
-                }
-            }
-
-            if (escala.isEmpty()) {
-                return escala;
-            }
-
-            boolean acabou = false;
-
-            while (!acabou) {
-                for (Morador morador : escala.keySet()) {
-                    try {
-                        Tarefa tarefa = ts.readRandom();
-                        escala.get(morador).add(tarefa);
-                    } catch (NaoHaMaisTarefasException e) {
-                        acabou = true;
-                        break;
-                    }
-                }
-            }
-        } catch (Exception e) {
+    public List<MoradorTarefaCombinacao> tarefaAleatorinator() {
+        try{
+            return mtcs.sortearTarefas();
+        }catch(Exception e){
+            //todo janela de erro
             e.printStackTrace();
         }
-        return escala;
+        return null;
     }
 
     private void visible() {
         frame.setVisible(true);
     }
 
-    private void tabelaPreenchinator() {
-        for (Map.Entry<Morador, List<Tarefa>> entrada : escala.entrySet()) {
+    private void tabelaPreenchinator(List<MoradorTarefaCombinacao> combinacoes) {
 
-            Morador infeliz = entrada.getKey();
-            List<Tarefa> tribulacoes = entrada.getValue();
-
-            for (Tarefa tarefa : tribulacoes) {
-                dtm.addRow(new String[]{
-                        infeliz.getNome(),
-                        tarefa.getNome(),
-                        tarefa.getDescricao()
-                });
-            }
+        for (MoradorTarefaCombinacao mtc:combinacoes) {
+            Morador infeliz = mtc.getMorador();
+            Tarefa tarefa = mtc.getTarefa();
+            dtm.addRow(new String[]{infeliz.getNome(), tarefa.getNome(), tarefa.getDescricao(), (tarefa.isFixa()?"Sim":"Não"), Miscelaneous.formatDateTime(mtc.getDataHoraAssociacao()), Miscelaneous.formatDate(mtc.getDataHoraLimite())});
         }
+
     }
 
     private void initialize() {

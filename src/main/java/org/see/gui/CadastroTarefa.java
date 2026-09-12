@@ -58,10 +58,8 @@ public class CadastroTarefa {
         	@Override
         	public void windowOpened(WindowEvent e) {
         		try {
-        			for(Morador m:ms.readAll()) {
-        				if(m.isAtivo()) {
-        					cmbMorador.addItem(m);
-        				}
+        			for(Morador m:ms.findAtivos()) {
+                        cmbMorador.addItem(m);
         			}
         			
         		}catch(Exception eq) {
