@@ -29,7 +29,7 @@ public class BinFileReader {
         return LocalDate.ofEpochDay(ByteBuffer.allocate(8).put(readBytes(8)).position(0).getLong());
     }
     public LocalDateTime readLocalDateTime() throws IOException {
-        return LocalDateTime.ofEpochSecond(ByteBuffer.allocate(8).put(readBytes(8)).position(0).getLong(), 0, ZoneId.of("America/Sao_Paulo").getRules().getOffset(Instant.now()));
+        return LocalDateTime.ofEpochSecond(ByteBuffer.allocate(8).put(readBytes(8)).position(0).getLong(), 0, ZoneId.systemDefault().getRules().getOffset(Instant.now()));
     }
     public int readInt() throws IOException {
         return ByteBuffer.allocate(4).put(readBytes(4)).position(0).getInt();

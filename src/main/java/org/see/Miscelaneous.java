@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Locale;
 
 
 public class Miscelaneous {
@@ -20,36 +19,6 @@ public class Miscelaneous {
     }
     public static String formatDateTime(LocalDateTime dateTime){
         return formatterComTime.format(dateTime);
-    }
-    public static int getDiffInYears(LocalDate mostRecent, LocalDate leastRecent){
-        int years = mostRecent.getYear() - leastRecent.getYear();
-        if((mostRecent.getMonthValue() < leastRecent.getMonthValue())||(mostRecent.getMonth() == leastRecent.getMonth() && mostRecent.getDayOfMonth() < leastRecent.getDayOfMonth())){ // se o mês for antes do aniversário ou o mês for o mesmo, mas o dia for antes
-            years -= 1;
-        }
-        return years;
-    }
-    public static int[] dateToArray(LocalDate date){
-       String dateString = formatDate(date);
-       int[] values = new int[3];
-       values[0] = Integer.parseInt(dateString.substring(0, 2));
-       values[1] = Integer.parseInt(dateString.substring(3, 5));
-       values[2] = Integer.parseInt(dateString.substring(6, 10));
-       return values;
-    }
-    public static int[] dateTimeToArray(LocalDateTime date){
-        String dateString = formatDateTime(date);
-        int[] values = new int[7];
-        values[0] = Integer.parseInt(dateString.substring(0, 2));
-        values[1] = Integer.parseInt(dateString.substring(3, 5));
-        values[2] = Integer.parseInt(dateString.substring(6, 10));
-        values[4] = Integer.parseInt(dateString.substring(11, 13));
-        values[5] = Integer.parseInt(dateString.substring(14, 16));
-        values[6] = Integer.parseInt(dateString.substring(17, 19));
-        return values;
-    }
-
-    public static LocalDate arrayToDate(int[] data){
-        return LocalDate.of(data[2], data[1], data[0]);
     }
 
     public static String[] simpleSubstringSearch(String[]arr, String subs) {
