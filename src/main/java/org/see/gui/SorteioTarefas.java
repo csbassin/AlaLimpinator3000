@@ -44,6 +44,7 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
         try {
             List<Morador> moradores = ms.readAll();
 
+            Collections.shuffle(moradores);
             for (Morador morador : moradores) {
                 if (morador.isAtivo()) {
                     escala.put(morador, new ArrayList<>());
