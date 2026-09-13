@@ -30,5 +30,6 @@ public abstract class Service<T> {
     }
 
     public abstract void cadastrar(T obj) throws Exception;
+    public abstract void update(T obj) throws Exception;
 }
 

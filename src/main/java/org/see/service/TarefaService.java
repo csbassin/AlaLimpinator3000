@@ -1,5 +1,6 @@
 package org.see.service;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.see.config.FakeFileLengths;
 import org.see.exception.NaoHaMaisTarefasException;
 import org.see.exception.TarefaJaCadastrada;
@@ -25,6 +26,11 @@ public class TarefaService extends Service<Tarefa> {
             throw new TarefaJaCadastrada("Esta tarefa já existe. Cadastre uma tarefa com outro nome.");
         }
         cache.write(tarefa);
+    }
+
+    @Override
+    public void update(Tarefa obj) throws Exception {
+        throw new ExecutionControl.NotImplementedException("Implementar");
     }
 
     public Tarefa findByNome(String nome) throws Exception {

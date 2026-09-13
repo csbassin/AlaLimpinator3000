@@ -30,6 +30,9 @@ public class Morador {
     }
     @Override
     public boolean equals(Object obj){
+        if(obj == null){
+            return false;
+        }
         return index.equals(((Morador)obj).getIndex());
     }
 

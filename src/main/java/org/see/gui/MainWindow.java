@@ -20,6 +20,7 @@ public class MainWindow {
 	private JFrame frame;
 	private JButton btnCadastrarMorador;
 	private JButton btnCadastrarTarefa;
+	private JButton btnEditarMorador;
 
 	public static void main(String[] args) {
 		try {
@@ -90,6 +91,23 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.EAST, btnCadastrarMorador, -10, SpringLayout.EAST, separator);
 		frame.getContentPane().add(btnCadastrarMorador);
 
+		btnEditarMorador = new JButton("Editar Morador");
+		btnEditarMorador.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new CadastroMorador(CadastroMorador.EDITAR);
+			}
+		});
+
+		btnEditarMorador.setBorder(new LineBorder(Color.WHITE, 2));
+		btnEditarMorador.setForeground(Color.WHITE);
+		btnEditarMorador.setContentAreaFilled(false);
+		btnEditarMorador.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		springLayout.putConstraint(SpringLayout.NORTH, btnEditarMorador, 6, SpringLayout.SOUTH, btnCadastrarMorador);
+		springLayout.putConstraint(SpringLayout.WEST, btnEditarMorador, 10, SpringLayout.WEST, separator);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnEditarMorador, 40, SpringLayout.SOUTH, btnCadastrarMorador);
+		springLayout.putConstraint(SpringLayout.EAST, btnEditarMorador, -10, SpringLayout.EAST, separator);
+		frame.getContentPane().add(btnEditarMorador);
+
 		btnCadastrarTarefa = new JButton("Cadastrar Tarefa");
 		btnCadastrarTarefa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -100,9 +118,9 @@ public class MainWindow {
 		btnCadastrarTarefa.setForeground(Color.WHITE);
 		btnCadastrarTarefa.setContentAreaFilled(false);
 		btnCadastrarTarefa.setFont(new Font("Noto Sans", Font.PLAIN, 16));
-		springLayout.putConstraint(SpringLayout.NORTH, btnCadastrarTarefa, 10, SpringLayout.SOUTH, btnCadastrarMorador);
+		springLayout.putConstraint(SpringLayout.NORTH, btnCadastrarTarefa, 10, SpringLayout.SOUTH, btnEditarMorador);
 		springLayout.putConstraint(SpringLayout.WEST, btnCadastrarTarefa, 10, SpringLayout.WEST, separator);
-		springLayout.putConstraint(SpringLayout.SOUTH, btnCadastrarTarefa, 40, SpringLayout.SOUTH, btnCadastrarMorador);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnCadastrarTarefa, 40, SpringLayout.SOUTH, btnEditarMorador);
 		springLayout.putConstraint(SpringLayout.EAST, btnCadastrarTarefa, -10, SpringLayout.EAST, separator);
 		frame.getContentPane().add(btnCadastrarTarefa);
 		

@@ -1,8 +1,7 @@
 package org.see.gui;
 
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import javax.swing.border.LineBorder;
 
 import org.see.exception.EmailJaCadastradoException;
@@ -14,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
+import java.util.List;
 
 public class CadastroMorador {
 
@@ -24,9 +24,26 @@ public class CadastroMorador {
 	private JLabel lblEmail;
 	private JTextField txtEmail;
 	private JCheckBox chckAtivo;
+	private JComboBox<Morador> cmbMoradorAEditar;
 	private MoradorService ms;
-	
+	private int action = 0;
+
+	public static final int CADASTRAR = 0;
+	public static final int EDITAR = 1;
+
+
 	public CadastroMorador() {
+		try {
+			ms = new MoradorService();
+		}catch(IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		initialize();
+	}
+
+	public CadastroMorador(int action) {
+		this.action = action;
 		try {
 			ms = new MoradorService();
 		}catch(IOException e) {
@@ -46,8 +63,8 @@ public class CadastroMorador {
 		frame.getContentPane().setBackground(Color.DARK_GRAY);
 		SpringLayout springLayout = new SpringLayout();
 		frame.getContentPane().setLayout(springLayout);
-		
 		JLabel lblNewLabel = new JLabel("Cadastrar Morador");
+
 		springLayout.putConstraint(SpringLayout.NORTH, lblNewLabel, 0, SpringLayout.NORTH, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.WEST, lblNewLabel, 10, SpringLayout.WEST, frame.getContentPane());
 		springLayout.putConstraint(SpringLayout.SOUTH, lblNewLabel, 30, SpringLayout.NORTH, frame.getContentPane());
@@ -72,7 +89,16 @@ public class CadastroMorador {
 				System.out.println(ativo);
 				if(!nome.trim().isEmpty() && !email.trim().isEmpty()) {
 					try {
-						ms.cadastrar(new Morador(nome, email, ativo));
+						if(action == CADASTRAR){
+							ms.cadastrar(new Morador(nome, email, ativo));
+						}else{
+							Morador m = (Morador) cmbMoradorAEditar.getSelectedItem();
+							m.setNome(nome);
+							m.setEmail(email);
+							m.setAtivo(ativo);
+							ms.update(m);
+							cmbMoradorAEditar.setSelectedIndex(0);
+						}
 						txtNome.setText("");
 						txtEmail.setText("");
 						chckAtivo.setSelected(true);
@@ -113,13 +139,63 @@ public class CadastroMorador {
 		btnCancelar.setContentAreaFilled(false);
 		btnCancelar.setBorder(new LineBorder(Color.WHITE, 2));
 		frame.getContentPane().add(btnCancelar);
-		
+
+
 		lblNome = new JLabel("Nome:");
-		springLayout.putConstraint(SpringLayout.NORTH, lblNome, 6, SpringLayout.SOUTH, separator);
-		springLayout.putConstraint(SpringLayout.WEST, lblNome, 0, SpringLayout.WEST, lblNewLabel);
 		lblNome.setForeground(Color.WHITE);
 		lblNome.setFont(new Font("Noto Sans", Font.PLAIN, 14));
 		frame.getContentPane().add(lblNome);
+
+		if(action == CADASTRAR){
+			springLayout.putConstraint(SpringLayout.NORTH, lblNome, 6, SpringLayout.SOUTH, separator);
+			springLayout.putConstraint(SpringLayout.WEST, lblNome, 0, SpringLayout.WEST, lblNewLabel);
+		}else if(action == EDITAR){
+			frame.setMinimumSize(new Dimension(640, 400));
+			lblNewLabel.setText("Editar morador");
+			frame.setTitle("Edição de Morador");
+			cmbMoradorAEditar = new JComboBox<>();
+
+			springLayout.putConstraint(SpringLayout.NORTH, cmbMoradorAEditar, 6, SpringLayout.SOUTH, separator);
+			springLayout.putConstraint(SpringLayout.WEST, cmbMoradorAEditar, 0, SpringLayout.WEST, separator);
+			springLayout.putConstraint(SpringLayout.EAST, cmbMoradorAEditar, 0, SpringLayout.EAST, separator);
+			springLayout.putConstraint(SpringLayout.SOUTH, cmbMoradorAEditar, 30, SpringLayout.SOUTH, separator);
+
+			frame.getContentPane().add(cmbMoradorAEditar);
+
+			springLayout.putConstraint(SpringLayout.NORTH, lblNome, 6, SpringLayout.SOUTH, cmbMoradorAEditar);
+			springLayout.putConstraint(SpringLayout.WEST, lblNome, 0, SpringLayout.WEST, separator);
+			try{
+				List<Morador> moradores = ms.readAll();
+				if(moradores.isEmpty()){
+					JOptionPane.showMessageDialog(null, "Não há moradores cadastrados, portanto, não é possível editar.", "Erro", JOptionPane.ERROR_MESSAGE);
+					frame.dispose();
+					return;
+				}
+				cmbMoradorAEditar.addItem(null);
+				for(Morador m: moradores){
+					cmbMoradorAEditar.addItem(m);
+				}
+			}catch(Exception e){
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				frame.dispose();
+				return;
+			}
+			cmbMoradorAEditar.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Morador m = (Morador) cmbMoradorAEditar.getSelectedItem();
+					if(m!=null){
+						txtNome.setText(m.getNome());
+						txtEmail.setText(m.getEmail());
+						chckAtivo.setSelected(m.isAtivo());
+						btnSalvar.setEnabled(true);
+					}else{
+						btnSalvar.setEnabled(false);
+					}
+				}
+			});
+			cmbMoradorAEditar.setSelectedIndex(0);
+		}
 		
 		txtNome = new JTextField();
 		springLayout.putConstraint(SpringLayout.NORTH, txtNome, 4, SpringLayout.SOUTH, lblNome);

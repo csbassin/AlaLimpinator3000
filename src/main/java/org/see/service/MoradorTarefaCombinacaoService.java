@@ -1,5 +1,6 @@
 package org.see.service;
 
+import jdk.jshell.spi.ExecutionControl;
 import org.see.Miscelaneous;
 import org.see.config.FakeFileLengths;
 import org.see.exception.*;
@@ -29,6 +30,11 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
             throw new TarefaJaAssociadaException("A tarefa "+mtc.getTarefa().getNome()+" já foi associada a um morador em "+ Miscelaneous.formatDate(mtc.getDataHoraAssociacao().toLocalDate()));
         }
         cache.write(mtc);
+    }
+
+    @Override
+    public void update(MoradorTarefaCombinacao obj) throws Exception {
+        throw new ExecutionControl.NotImplementedException("Implementar");
     }
 
     /**

@@ -8,10 +8,9 @@ import org.see.modelo.Tarefa;
 import org.see.service.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.List;
 
 public class SorteioTarefas { //eu sei que o nome ficou ruim.
@@ -65,8 +64,34 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
 
     private void initialize() {
         frame = new JFrame();
+        frame.setMinimumSize(new Dimension(800, 600));
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) { // recalculando o size das colunas
+                int larguraScroll = scrollPane.getViewport().getWidth();
+                int alturaScroll = scrollPane.getViewport().getHeight();
+                int alturaLinha = alturaScroll/table.getRowCount();
+                if(alturaLinha<40){ // tamanho mínimo é 40
+                    table.setRowHeight(40);
+                }else{
+                    table.setRowHeight(alturaLinha);
+                }
+                // nome do morador
+                table.getColumnModel().getColumn(0).setPreferredWidth((int)(larguraScroll*0.15)); //15% da largura do scroll
+                // nome da tarefa
+                table.getColumnModel().getColumn(1).setPreferredWidth((int)(larguraScroll*0.17)); //17% da largura do scroll
+                // descrição da tarefa
+                table.getColumnModel().getColumn(2).setPreferredWidth((int)(larguraScroll*0.4)); //40% da largura do scroll
+                // fixa
+                table.getColumnModel().getColumn(3).setPreferredWidth((int)(larguraScroll*0.05)); //5% da largura do scroll
+                // data e hora do sorteio
+                table.getColumnModel().getColumn(4).setPreferredWidth((int)(larguraScroll*0.15)); //15% da largura do scroll
+                // data limite
+                table.getColumnModel().getColumn(5).setPreferredWidth((int)(larguraScroll*0.08)); //8% da largura do scroll
+            }
+        });
         frame.setTitle("Sorteio de Tarefas");
-        frame.setBounds(100, 100, 640, 480);
+        frame.setBounds(100, 100, 800, 600);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.getContentPane().setFont(new Font("Noto Sans", Font.PLAIN, 14));
         frame.getContentPane().setBackground(Color.DARK_GRAY);
@@ -99,13 +124,9 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
         frame.getContentPane().add(scrollPane);
 
         table = new JTable(dtm);
-        table.setRowHeight(40);
+
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         for(int i = 0; i<table.getColumnModel().getColumnCount(); i++){
-            TableColumn coluna =  table.getColumnModel().getColumn(i);
-            if(i==3){
-               coluna.setPreferredWidth(30);
-               coluna.setResizable(false);
-            }
             table.getColumnModel().getColumn(i).setCellRenderer(new MultiLineCellRenderer());
         }
         scrollPane.setViewportView(table);

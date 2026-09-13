@@ -62,6 +62,15 @@ public class MoradorService extends Service<Morador> {
         }
         cache.write(morador);
     }
+
+    @Override
+    public void update(Morador morador) throws Exception{
+        if(morador.getIndex() == null){
+            throw new NullIndexException("Índice do morador está vazio.");
+        }
+        cache.write(morador);
+    }
+
     public Morador findByEmail(String email) throws Exception {
         for(Morador m:readAll()){
             if(m.getEmail().equals(email)){
