@@ -29,47 +29,30 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
             ts = new TarefaService();
             ms = new MoradorService();
             mtcs = new MoradorTarefaCombinacaoService();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return;
-        }
-        long start = System.currentTimeMillis();
-        initialize();
-        System.out.println("Elapsed Time: "+(System.currentTimeMillis()-start)+"ms");
-    }
+            long start = System.currentTimeMillis();
+            for(MoradorTarefaCombinacao mtc:mtcs.sortearTarefas()){
+                Morador infeliz = mtc.getMorador();
+                Tarefa tarefa = mtc.getTarefa();
+                dtm.addRow(new String[]{infeliz.getNome(), tarefa.getNome(), tarefa.getDescricao(), (tarefa.isFixa()?"Sim":"Não"), Miscelaneous.formatDateTime(mtc.getDataHoraAssociacao()), Miscelaneous.formatDate(mtc.getDataHoraLimite())});
+            }
+            System.out.println("Elapsed Time: "+(System.currentTimeMillis()-start)+"ms");
 
-    public List<MoradorTarefaCombinacao> tarefaAleatorinator() {
-        try{
-            return mtcs.sortearTarefas();
         }catch(TarefaJaAssociadaException e){
             JOptionPane.showMessageDialog(null, e.getMessage(), "O sorteio já foi realizado", JOptionPane.ERROR_MESSAGE);
-            frame.dispose();
+            return;
         } catch (Exception e2) {
             JOptionPane.showMessageDialog(null, e2.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
-            frame.dispose();
+            return;
         }
-        return null;
+        initialize();
     }
 
     private void visible() {
         frame.setVisible(true);
     }
 
-    private void tabelaPreenchinator(List<MoradorTarefaCombinacao> combinacoes) {
-        if(combinacoes == null){
-            frame.dispose();
-            return;
-        }
-        for (MoradorTarefaCombinacao mtc:combinacoes) {
-            Morador infeliz = mtc.getMorador();
-            Tarefa tarefa = mtc.getTarefa();
-            dtm.addRow(new String[]{infeliz.getNome(), tarefa.getNome(), tarefa.getDescricao(), (tarefa.isFixa()?"Sim":"Não"), Miscelaneous.formatDateTime(mtc.getDataHoraAssociacao()), Miscelaneous.formatDate(mtc.getDataHoraLimite())});
-        }
-    }
-
     private void initialize() {
         frame = new JFrame();
-        tabelaPreenchinator(tarefaAleatorinator());
         frame.setMinimumSize(new Dimension(800, 600));
         frame.addComponentListener(new ComponentAdapter() {
             @Override

@@ -92,7 +92,7 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
     public List<MoradorTarefaCombinacao> sortearTarefas() throws Exception {
         MoradorTarefaCombinacao mtcLido = readLast();
         if(mtcLido!=null && mtcLido.getDataHoraLimite().isAfter(LocalDate.now())){ // se a data limite do último associado for maior que a data de sorteio do novo
-            throw new TarefaJaAssociadaException("Só será possível realizar um novo sorteio em "+mtcLido.getDataHoraLimite()+".");
+            throw new TarefaJaAssociadaException("Só será possível realizar um novo sorteio em "+Miscelaneous.formatDate(mtcLido.getDataHoraLimite())+".");
         }
         List<MoradorTarefaCombinacao> combinacoes = new ArrayList<>();
         boolean acabaramMoradores = false;
