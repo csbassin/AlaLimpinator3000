@@ -2,6 +2,7 @@ package org.see.gui;
 
 
 import org.see.Miscelaneous;
+import org.see.exception.TarefaJaAssociadaException;
 import org.see.modelo.Morador;
 import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Tarefa;
@@ -33,7 +34,6 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
             return;
         }
         long start = System.currentTimeMillis();
-        tabelaPreenchinator(tarefaAleatorinator());
         initialize();
         System.out.println("Elapsed Time: "+(System.currentTimeMillis()-start)+"ms");
     }
@@ -41,9 +41,12 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
     public List<MoradorTarefaCombinacao> tarefaAleatorinator() {
         try{
             return mtcs.sortearTarefas();
-        }catch(Exception e){
-            //todo janela de erro
-            e.printStackTrace();
+        }catch(TarefaJaAssociadaException e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "O sorteio já foi realizado", JOptionPane.ERROR_MESSAGE);
+            frame.dispose();
+        } catch (Exception e2) {
+            JOptionPane.showMessageDialog(null, e2.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            frame.dispose();
         }
         return null;
     }
@@ -53,41 +56,46 @@ public class SorteioTarefas { //eu sei que o nome ficou ruim.
     }
 
     private void tabelaPreenchinator(List<MoradorTarefaCombinacao> combinacoes) {
-
+        if(combinacoes == null){
+            frame.dispose();
+            return;
+        }
         for (MoradorTarefaCombinacao mtc:combinacoes) {
             Morador infeliz = mtc.getMorador();
             Tarefa tarefa = mtc.getTarefa();
             dtm.addRow(new String[]{infeliz.getNome(), tarefa.getNome(), tarefa.getDescricao(), (tarefa.isFixa()?"Sim":"Não"), Miscelaneous.formatDateTime(mtc.getDataHoraAssociacao()), Miscelaneous.formatDate(mtc.getDataHoraLimite())});
         }
-
     }
 
     private void initialize() {
         frame = new JFrame();
+        tabelaPreenchinator(tarefaAleatorinator());
         frame.setMinimumSize(new Dimension(800, 600));
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) { // recalculando o size das colunas
-                int larguraScroll = scrollPane.getViewport().getWidth();
-                int alturaScroll = scrollPane.getViewport().getHeight();
-                int alturaLinha = alturaScroll/table.getRowCount();
-                if(alturaLinha<40){ // tamanho mínimo é 40
-                    table.setRowHeight(40);
-                }else{
-                    table.setRowHeight(alturaLinha);
+                if(table.getRowCount()>0){
+                    int larguraScroll = scrollPane.getViewport().getWidth();
+                    int alturaScroll = scrollPane.getViewport().getHeight();
+                    int alturaLinha = alturaScroll/table.getRowCount();
+                    if(alturaLinha<40){ // tamanho mínimo é 40
+                        table.setRowHeight(40);
+                    }else{
+                        table.setRowHeight(alturaLinha);
+                    }
+                    // nome do morador
+                    table.getColumnModel().getColumn(0).setPreferredWidth((int)(larguraScroll*0.15)); //15% da largura do scroll
+                    // nome da tarefa
+                    table.getColumnModel().getColumn(1).setPreferredWidth((int)(larguraScroll*0.17)); //17% da largura do scroll
+                    // descrição da tarefa
+                    table.getColumnModel().getColumn(2).setPreferredWidth((int)(larguraScroll*0.4)); //40% da largura do scroll
+                    // fixa
+                    table.getColumnModel().getColumn(3).setPreferredWidth((int)(larguraScroll*0.05)); //5% da largura do scroll
+                    // data e hora do sorteio
+                    table.getColumnModel().getColumn(4).setPreferredWidth((int)(larguraScroll*0.15)); //15% da largura do scroll
+                    // data limite
+                    table.getColumnModel().getColumn(5).setPreferredWidth((int)(larguraScroll*0.08)); //8% da largura do scroll
                 }
-                // nome do morador
-                table.getColumnModel().getColumn(0).setPreferredWidth((int)(larguraScroll*0.15)); //15% da largura do scroll
-                // nome da tarefa
-                table.getColumnModel().getColumn(1).setPreferredWidth((int)(larguraScroll*0.17)); //17% da largura do scroll
-                // descrição da tarefa
-                table.getColumnModel().getColumn(2).setPreferredWidth((int)(larguraScroll*0.4)); //40% da largura do scroll
-                // fixa
-                table.getColumnModel().getColumn(3).setPreferredWidth((int)(larguraScroll*0.05)); //5% da largura do scroll
-                // data e hora do sorteio
-                table.getColumnModel().getColumn(4).setPreferredWidth((int)(larguraScroll*0.15)); //15% da largura do scroll
-                // data limite
-                table.getColumnModel().getColumn(5).setPreferredWidth((int)(larguraScroll*0.08)); //8% da largura do scroll
             }
         });
         frame.setTitle("Sorteio de Tarefas");

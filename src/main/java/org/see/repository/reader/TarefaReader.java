@@ -52,6 +52,7 @@ public class TarefaReader implements ReaderInterface<Tarefa> {
             t = new Tarefa(nome, descricao);
             reader.setCursor(reader.getCursor()+4); //movo 4 para pular o int desnecessário
         }
+        t.setNumero(index);
         return t;
     }
 

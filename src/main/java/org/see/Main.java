@@ -35,7 +35,8 @@ public class Main {
             Morador m = ms.findByEmail("cauabassin@outlook.com");
             System.out.println("Morador de email "+m.getEmail()+" é "+m.getNome());
 
-            for(MoradorTarefaCombinacao mtc: mtcs.sortearTarefas()){
+            mtcs.sortearTarefas();
+            for(MoradorTarefaCombinacao mtc:mtcs.readLastSorteio()){
                 System.out.println(mtc.toString());
             }
 

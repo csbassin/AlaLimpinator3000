@@ -10,6 +10,7 @@ import org.see.modelo.Tarefa;
 import org.see.repository.cache.CacheMoradorTarefaCombinacao;
 import org.see.service.interfaces.Service;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,48 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
     }
 
     // não posso registrar a mesma tarefa na mesma data, mesmo que para dois moradores, já que a mesma tarefa não vai ser feita duas vezes
-    //todo para cadastrar outro sorteio, a data limite precisa ter passado
+
     public void cadastrar(MoradorTarefaCombinacao mtc) throws Exception {
-        if(findByTarefaEDataAssociacao(mtc.getTarefa(), mtc.getDataHoraAssociacao())!=null){ // se já atribuí essa tarefa nessa data
-            throw new TarefaJaAssociadaException("A tarefa "+mtc.getTarefa().getNome()+" já foi associada a um morador em "+ Miscelaneous.formatDate(mtc.getDataHoraAssociacao().toLocalDate()));
-        }
+
         cache.write(mtc);
+    }
+    public void cadastrarTodos(List<MoradorTarefaCombinacao> mtces) throws Exception {
+        MoradorTarefaCombinacao mtcLido = readLast();
+        if(mtcLido!=null && mtcLido.getDataHoraLimite().isAfter(mtces.getFirst().getDataHoraAssociacao().toLocalDate())){ // se a data limite do último associado for maior que a data de sorteio do novo
+            throw new TarefaJaAssociadaException("Só será possível realizar um novo sorteio em "+Miscelaneous.formatDate(mtcLido.getDataHoraLimite())+".");
+        }
+        for(int i = 0; i<mtces.size(); i++){
+            cadastrar(mtces.get(i));
+        }
+    }
+    public MoradorTarefaCombinacao readLast() throws Exception {
+        int lastIndex = (int)FakeFileLengths.moradoresETarefas/MoradorTarefaCombinacao.getCombinacaoSizeInBytes()-1;
+        if(lastIndex>=0){
+            return read(lastIndex);
+        }
+        return null;
+    }
+
+    public List<MoradorTarefaCombinacao> readLastSorteio() throws Exception {
+        List<MoradorTarefaCombinacao> mtces = new ArrayList<>();
+        int lastIndex = (int)FakeFileLengths.moradoresETarefas/MoradorTarefaCombinacao.getCombinacaoSizeInBytes()-1;
+        boolean para = false;
+        MoradorTarefaCombinacao ultimoLido = null;
+        MoradorTarefaCombinacao penultimoLido;
+        do{
+            penultimoLido = ultimoLido;
+            ultimoLido = read(lastIndex--);
+            if(penultimoLido == null){ // se últimoLido é o primeiro a ser lido, adiciono direto, pq ele é certamente parte do último sorteio
+                mtces.add(ultimoLido);
+            }else{
+                if(penultimoLido.getDataHoraAssociacao().toLocalDate().isEqual(ultimoLido.getDataHoraAssociacao().toLocalDate())){ // se a data de sorteio for a mesma
+                    mtces.add(ultimoLido);
+                }else{
+                    para = true;
+                }
+            }
+        }while(!para && lastIndex>=0);
+        return mtces;
     }
 
     @Override
@@ -51,7 +88,12 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
         return null;
     }
 
+
     public List<MoradorTarefaCombinacao> sortearTarefas() throws Exception {
+        MoradorTarefaCombinacao mtcLido = readLast();
+        if(mtcLido!=null && mtcLido.getDataHoraLimite().isAfter(LocalDate.now())){ // se a data limite do último associado for maior que a data de sorteio do novo
+            throw new TarefaJaAssociadaException("Só será possível realizar um novo sorteio em "+mtcLido.getDataHoraLimite()+".");
+        }
         List<MoradorTarefaCombinacao> combinacoes = new ArrayList<>();
         boolean acabaramMoradores = false;
         boolean acabaramTarefas = false;
@@ -93,6 +135,7 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
         //resetar as variáveis usadas para o sorteio
         ms.resetSorteio();
         ts.resetSorteio();
+        cadastrarTodos(combinacoes);
         return combinacoes;
     }
 
