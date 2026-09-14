@@ -10,6 +10,7 @@ import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Tarefa;
 import org.see.repository.interfaces.ReaderInterface;
 import org.see.service.MoradorService;
+import org.see.service.SorteioService;
 import org.see.service.TarefaService;
 
 import java.io.File;
@@ -51,10 +52,9 @@ public class MoradorTarefaCombinacaoReader implements ReaderInterface<MoradorTar
         MoradorTarefaCombinacao mtc;
         int indexMorador = reader.readInt();
         int indexTarefa = reader.readInt();
-        LocalDateTime dataHoraAssociacao = reader.readLocalDateTime();
         boolean feita = reader.readBoolean();
-        LocalDate limite = reader.readLocalDate();
-        mtc = new MoradorTarefaCombinacao(index, ms.read(indexMorador), ts.read(indexTarefa), dataHoraAssociacao, feita, limite);
+        int indexSorteio = reader.readInt();
+        mtc = new MoradorTarefaCombinacao(index, ms.read(indexMorador), ts.read(indexTarefa), feita, indexSorteio);
         return mtc;
     }
 

@@ -49,14 +49,13 @@ public class MoradorTarefaCombinacaoWriter implements WriterInterface<MoradorTar
     }
 
     public void genericWrite(MoradorTarefaCombinacao obj) throws IOException, NullIndexException {
-        if(obj.getMorador().getIndex() == null || obj.getTarefa().getNumero() == null){
-            throw new NullIndexException("Morador ou tarefa possuem índice null. Não é possível registrar a associação.");
+        if(obj.getMorador().getIndex() == null || obj.getTarefa().getNumero() == null || obj.getSorteio() == null){
+            throw new NullIndexException("Morador, tarefa ou sorteio possuem índice null. Não é possível registrar a associação.");
         }
         writer.writeInt(obj.getMorador().getIndex());
         writer.writeInt(obj.getTarefa().getNumero());
-        writer.writeDateTime(obj.getDataHoraAssociacao());
         writer.writeBoolean(obj.isFeita());
-        writer.writeData(obj.getDataHoraLimite());
+        writer.writeInt(obj.getSorteio());
         writer.flush();
     }
 }

@@ -7,6 +7,7 @@ import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Tarefa;
 import org.see.service.MoradorService;
 import org.see.service.MoradorTarefaCombinacaoService;
+import org.see.service.SorteioService;
 import org.see.service.TarefaService;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class Main {
             MoradorService ms = new MoradorService();
             TarefaService ts = new TarefaService();
             MoradorTarefaCombinacaoService mtcs = new MoradorTarefaCombinacaoService();
+            SorteioService ss = new SorteioService();
 
             List<Morador> moradores = ms.readAll();
             System.out.println("Todos os moradores: ");
@@ -32,11 +34,11 @@ public class Main {
             for(Morador m : moradores){
                 System.out.println(m.toString());
             }
-            Morador m = ms.findByEmail("cauabassin@outlook.com");
+            Morador m = ms.findByEmail("cauabassin@id.uff.br");
             System.out.println("Morador de email "+m.getEmail()+" é "+m.getNome());
 
-            mtcs.sortearTarefas();
-            for(MoradorTarefaCombinacao mtc:mtcs.readLastSorteio()){
+            //mtcs.sortearTarefas();
+            for(MoradorTarefaCombinacao mtc:ss.readLast().getAssociacoes()){
                 System.out.println(mtc.toString());
             }
 

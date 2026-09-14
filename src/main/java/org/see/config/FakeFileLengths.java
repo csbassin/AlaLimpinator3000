@@ -3,6 +3,7 @@ package org.see.config;
 import org.see.annotation.FakeSize;
 import org.see.modelo.Morador;
 import org.see.modelo.MoradorTarefaCombinacao;
+import org.see.modelo.Sorteio;
 import org.see.modelo.Tarefa;
 
 public class FakeFileLengths {
@@ -12,4 +13,6 @@ public class FakeFileLengths {
     public static long tarefa = 0;
     @FakeSize(target = MoradorTarefaCombinacao.class)
     public static long moradoresETarefas = 0;
+    @FakeSize(target = Sorteio.class)
+    public static long sorteios = 0;
 }

@@ -2,7 +2,6 @@ package org.see.modelo;
 
 import org.see.annotation.GetSize;
 import org.see.annotation.Index;
-import org.see.config.FakeFileLengths;
 import org.see.config.StaticConfigObjects;
 
 public class Tarefa {
