@@ -22,6 +22,7 @@ public class MoradorService extends Service<Morador> {
     public void resetSorteio(){
         exclusionList.clear();
     }
+
     public Morador readRandomAtivo() throws Exception {
         List<Morador> disponiveis = findAtivos();
         if(disponiveis.isEmpty()){

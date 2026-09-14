@@ -52,8 +52,13 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
         boolean acabaramTarefas = false;
         int quantidadeTarefas = ts.getQuantidade();
         int quantidadeMoradoresAtivos = ms.getQuantidadeAtivos();
-        int tpp = quantidadeTarefas/quantidadeMoradoresAtivos;
-        while(!acabaramMoradores && !acabaramTarefas){
+        int tpp;
+        if(quantidadeMoradoresAtivos>quantidadeTarefas){
+            tpp = (int) Math.ceil((double)quantidadeTarefas/quantidadeMoradoresAtivos);
+        }else{
+            tpp = quantidadeTarefas/quantidadeMoradoresAtivos;
+        }
+        while(!acabaramTarefas){
             try{
                 Morador m = ms.readRandomAtivo(); // para quando há mais moradores que tarefas, não caírem sempre os mesmos
                 List<Tarefa> fixas = ts.getTarefasFixasAssociadas(m);
@@ -74,15 +79,15 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
                 e.printStackTrace();
             }
         }
-        // se as tarefas não acabaram, preciso distribuir as que faltam para quaisquer moradores
-        while(!acabaramTarefas){
-            // não preciso verificar se os moradores acabaram pq se acabarem, a lista de exclusões zera e o sorteio pode começar de novo
+        while(!acabaramMoradores){ // adicionar as tarefas fixas caso eles não tenham sido sorteados
             try{
-                combinacoes.add(new MoradorTarefaCombinacao(ms.readRandomAtivo(), ts.readRandom()));
-            }catch(NaoHaMaisTarefasException e){
-                acabaramTarefas = true;
-            }catch(NaoHaMaisMoradoresException e1){
-                System.out.println("acabaram os moradores. Vai resetar na próxima");
+                Morador m = ms.readRandomAtivo();
+                List<Tarefa> fixas = ts.getTarefasFixasAssociadas(m);
+                for(Tarefa t:fixas){
+                    combinacoes.add(new MoradorTarefaCombinacao(m, t));
+                }
+            }catch(NaoHaMaisMoradoresException e){
+                acabaramMoradores = true;
             }
         }
         //resetar as variáveis usadas para o sorteio
