@@ -1,5 +1,6 @@
 package org.see.service;
 
+import org.see.config.StaticConfigObjects;
 import org.see.exception.*;
 import org.see.modelo.Morador;
 import org.see.repository.cache.CacheMorador;
@@ -57,6 +58,12 @@ public class MoradorService extends Service<Morador> {
     }
     @Override
     public void cadastrar(Morador morador) throws Exception {
+        if(morador.getEmail().length()> StaticConfigObjects.MAX_EMAIL_LEN){
+            throw new StringMuitoLongaException("O e-mail deve ter no máximo "+StaticConfigObjects.MAX_EMAIL_LEN+" caracteres.");
+        }
+        if(morador.getNome().length()>StaticConfigObjects.MAX_MORADOR_NAME_LEN){
+            throw new StringMuitoLongaException("O nome deve ter no máximo "+StaticConfigObjects.MAX_MORADOR_NAME_LEN+" caracteres.");
+        }
         Morador m = findByEmail(morador.getEmail());
         if(m!=null){
             throw new EmailJaCadastradoException("Este e-mail já está associado a "+m.getNome());
@@ -66,6 +73,16 @@ public class MoradorService extends Service<Morador> {
 
     @Override
     public void update(Morador morador) throws Exception{
+        if(morador.getEmail().length()> StaticConfigObjects.MAX_EMAIL_LEN){
+            throw new StringMuitoLongaException("O e-mail deve ter no máximo "+StaticConfigObjects.MAX_EMAIL_LEN+" caracteres.");
+        }
+        if(morador.getNome().length()>StaticConfigObjects.MAX_MORADOR_NAME_LEN){
+            throw new StringMuitoLongaException("O nome deve ter no máximo "+StaticConfigObjects.MAX_MORADOR_NAME_LEN+" caracteres.");
+        }
+        Morador m = findByEmail(morador.getEmail());
+        if(m!=null && !(m.equals(morador))){ //se existir um morador com esse email e ele não for o mesmo que o atual
+            throw new EmailJaCadastradoException("Este e-mail já está associado a "+m.getNome());
+        }
         if(morador.getIndex() == null){
             throw new NullIndexException("Índice do morador está vazio.");
         }

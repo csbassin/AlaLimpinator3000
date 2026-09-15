@@ -93,10 +93,12 @@ public class CadastroMorador {
 							ms.cadastrar(new Morador(nome, email, ativo));
 						}else{
 							Morador m = (Morador) cmbMoradorAEditar.getSelectedItem();
-							m.setNome(nome);
+							Morador updated = new Morador(m.getIndex(), nome, email, ativo);
+							// tenho que criar um novo para não mudar os dados na memória
+							ms.update(updated);
 							m.setEmail(email);
+							m.setNome(nome);
 							m.setAtivo(ativo);
-							ms.update(m);
 							cmbMoradorAEditar.setSelectedIndex(0);
 						}
 						txtNome.setText("");
