@@ -11,4 +11,8 @@ public class StaticConfigObjects {
     public static final int MAX_TAREFA_NAME_LEN = 30;
     public static final int MAX_TAREFA_DESCRICAO_LEN = 300;
     public static final int PRAZO_REALIZACAO_TAREFA_DIAS = 7;
+    public static final int PORTA_SERVIDOR_EMAIL = 587;
+    public static final String EMAIL = "AlaLimpinator300.see@proton.me";
+    public static String password = null;
+    public static final int MAX_SENHA_SIZE = 50;
 }

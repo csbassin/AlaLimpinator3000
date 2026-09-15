@@ -1,14 +1,12 @@
 package org.see.gui;
 
+import org.see.config.StaticConfigObjects;
+import org.see.service.SenhaService;
+
 import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Font;
-import javax.swing.JLabel;
-import javax.swing.SpringLayout;
-import javax.swing.JSeparator;
-import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -21,12 +19,14 @@ public class MainWindow {
 	private JButton btnCadastrarMorador;
 	private JButton btnCadastrarTarefa;
 	private JButton btnEditarMorador;
+	private SenhaService senhaService;
 
 	public static void main(String[] args) {
 		try {
 			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
 		} catch (Exception e) {
 			e.printStackTrace();
+			return;
 		}
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,6 +45,24 @@ public class MainWindow {
 	}
 
 	private void initialize() {
+		try{
+			senhaService = new SenhaService();
+		}catch(Exception e){
+			e.printStackTrace();
+			return;
+		}
+		String senha = senhaService.read();
+		if(senha == null){
+			senha = JOptionPane.showInputDialog("Qual a senha do e-mail?");
+			try{
+				senhaService.write(senha);
+			}catch (Exception e){
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+		}
+		StaticConfigObjects.password = senha;
+
 		frame = new JFrame();
 		frame.addWindowListener(new WindowAdapter() {
 			@Override
