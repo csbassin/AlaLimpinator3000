@@ -55,8 +55,8 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
         int tpp;
         if(quantidadeMoradoresAtivos>quantidadeTarefas){
             tpp = (int) Math.ceil((double)quantidadeTarefas/quantidadeMoradoresAtivos);
-        }else{
-            tpp = quantidadeTarefas/quantidadeMoradoresAtivos;
+        }else{ // arredondo para o mais próximo para evitar outro problema
+            tpp = Math.toIntExact(Math.round((double) quantidadeTarefas / quantidadeMoradoresAtivos));
         }
         while(!acabaramTarefas){
             try{
