@@ -2,7 +2,9 @@ package org.see.service;
 
 import jdk.jshell.spi.ExecutionControl;
 import org.see.config.FakeFileLengths;
+import org.see.config.StaticConfigObjects;
 import org.see.exception.NaoHaMaisTarefasException;
+import org.see.exception.StringMuitoLongaException;
 import org.see.exception.TarefaJaCadastrada;
 import org.see.exception.TodasAsTarefasSaoFixasException;
 import org.see.modelo.Morador;
@@ -22,6 +24,12 @@ public class TarefaService extends Service<Tarefa> {
     }
 
     public void cadastrar(Tarefa tarefa) throws Exception {
+        if(tarefa.getNome().length()> StaticConfigObjects.MAX_TAREFA_NAME_LEN){
+            throw new StringMuitoLongaException("Nome da tarefa deve ter no máximo "+StaticConfigObjects.MAX_TAREFA_NAME_LEN+".");
+        }
+        if(tarefa.getDescricao().length()>StaticConfigObjects.MAX_TAREFA_DESCRICAO_LEN){
+            throw new StringMuitoLongaException("A descrição da tarefa deve ter no máximo "+StaticConfigObjects.MAX_TAREFA_DESCRICAO_LEN+".");
+        }
         if(findByNome(tarefa.getNome())!=null){
             throw new TarefaJaCadastrada("Esta tarefa já existe. Cadastre uma tarefa com outro nome.");
         }
