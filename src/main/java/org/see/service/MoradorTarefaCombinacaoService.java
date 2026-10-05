@@ -32,7 +32,11 @@ public class MoradorTarefaCombinacaoService extends Service<MoradorTarefaCombina
 
     @Override
     public void update(MoradorTarefaCombinacao obj) throws Exception {
-        throw new ExecutionControl.NotImplementedException("Implementar");
+        if(obj.getNumero() == null){
+            throw new IndiceInexistenteException("O índice deve estar preenchido.");
+        }
+        MoradorTarefaCombinacao original = read(obj.getNumero());
+        cache.write(obj);
     }
 
     public List<MoradorTarefaCombinacao> findBySorteio(int numeroSorteio) throws Exception {

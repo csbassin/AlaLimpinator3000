@@ -20,6 +20,7 @@ public class MainWindow {
 	private JButton btnCadastrarTarefa;
 	private JButton btnEditarMorador;
 	private SenhaService senhaService;
+	private JButton btnMostrarSorteios;
 
 	public static void main(String[] args) {
 		try {
@@ -182,7 +183,7 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.WEST, btnSortearTarefas, 0, SpringLayout.WEST, btnListarTarefas);
 		springLayout.putConstraint(SpringLayout.EAST, btnSortearTarefas, 0, SpringLayout.EAST, btnListarTarefas);
 		btnSortearTarefas.setForeground(Color.WHITE);
-		btnSortearTarefas.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		btnSortearTarefas.setFont(new Font("Nactionoto Sans", Font.PLAIN, 16));
 		btnSortearTarefas.setContentAreaFilled(false);
 		btnSortearTarefas.setBorder(new LineBorder(Color.WHITE, 2));
 		frame.getContentPane().add(btnSortearTarefas);
@@ -194,6 +195,21 @@ public class MainWindow {
 		springLayout.putConstraint(SpringLayout.EAST, lblCreditos, -10, SpringLayout.EAST, frame.getContentPane());
 
 		frame.getContentPane().add(lblCreditos);
+		
+		btnMostrarSorteios = new JButton("Mostrar sorteios");
+		btnMostrarSorteios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ListagemSorteio();
+			}
+		});
+		springLayout.putConstraint(SpringLayout.NORTH, btnMostrarSorteios, 6, SpringLayout.SOUTH, btnSortearTarefas);
+		springLayout.putConstraint(SpringLayout.WEST, btnMostrarSorteios, 0, SpringLayout.WEST, btnSortearTarefas);
+		springLayout.putConstraint(SpringLayout.EAST, btnMostrarSorteios, 0, SpringLayout.EAST, btnCadastrarMorador);
+		btnMostrarSorteios.setForeground(Color.WHITE);
+		btnMostrarSorteios.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		btnMostrarSorteios.setContentAreaFilled(false);
+		btnMostrarSorteios.setBorder(new LineBorder(Color.WHITE, 2));
+		frame.getContentPane().add(btnMostrarSorteios);
 
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

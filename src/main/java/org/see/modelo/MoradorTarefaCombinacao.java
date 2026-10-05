@@ -49,7 +49,7 @@ public class MoradorTarefaCombinacao {
 
     @Override
     public String toString(){
-        return "Morador: "+morador.getNome()+". Tarefa: "+tarefa.getNome()+". Feita: "+(feita?"Sim":"Não")+". Data e hora do sorteio: ";
+        return "Morador: "+morador.getNome()+". Tarefa: "+tarefa.getNome()+". Feita: "+(feita?"Sim":"Não");
     }
 
     public boolean isFeita() {
