@@ -1,16 +1,21 @@
 package org.see;
 
+import org.see.config.StaticConfigObjects;
 import org.see.exception.NaoHaMaisTarefasException;
+import org.see.mail.MailSender;
 import org.see.modelo.Morador;
 
 import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Tarefa;
 import org.see.service.MoradorService;
 import org.see.service.MoradorTarefaCombinacaoService;
+import org.see.service.SenhaService;
 import org.see.service.SorteioService;
 import org.see.service.TarefaService;
 
 import java.util.List;
+
+import javax.swing.JOptionPane;
 
 public class Main {
     static void main() {
@@ -18,29 +23,20 @@ public class Main {
     }
     private static void teste(){
         try{
-            MoradorService ms = new MoradorService();
-            TarefaService ts = new TarefaService();
-            MoradorTarefaCombinacaoService mtcs = new MoradorTarefaCombinacaoService();
-            SorteioService ss = new SorteioService();
+        	SenhaService senhaService = new SenhaService();
 
-            List<Morador> moradores = ms.readAll();
-            System.out.println("Todos os moradores: ");
-            for(Morador m : moradores){
-                System.out.println(m.toString());
-            }
-
-            moradores = ms.searchByNome("a");
-            System.out.println("Moradores cujo nome contém a: ");
-            for(Morador m : moradores){
-                System.out.println(m.toString());
-            }
-            Morador m = ms.findByEmail("cauabassin@id.uff.br");
-            System.out.println("Morador de email "+m.getEmail()+" é "+m.getNome());
-
-            //mtcs.sortearTarefas();
-            for(MoradorTarefaCombinacao mtc:ss.readLast().getAssociacoes()){
-                System.out.println(mtc.toString());
-            }
+        	String senha = senhaService.read();
+    		if(senha == null){
+    			senha = JOptionPane.showInputDialog("Qual a senha do e-mail?");
+    			try{
+    				senhaService.write(senha);
+    			}catch (Exception e){
+    				JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+    				return;
+    			}
+    		}
+    		StaticConfigObjects.password = senha;
+            MailSender.sendTeste();
 
         }catch(Exception e) {
             e.printStackTrace();

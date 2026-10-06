@@ -82,6 +82,8 @@ public class EditarSorteio {
 					for(MoradorTarefaCombinacao alt:alterados){
 						mtcs.update(alt);
 					}
+					sorteio.setAssociacoes(alterados);
+					JOptionPane.showMessageDialog(null, "Sucesso", "Alterado com Sucesso", JOptionPane.INFORMATION_MESSAGE);
 				}catch (Exception e1){
 					JOptionPane.showMessageDialog(null, "Erro", e1.getMessage(), JOptionPane.ERROR_MESSAGE);
 				}
