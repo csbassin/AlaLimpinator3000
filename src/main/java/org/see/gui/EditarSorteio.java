@@ -8,6 +8,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.see.exception.EmailJaCadastradoException;
+import org.see.mail.MailSender;
 import org.see.modelo.Morador;
 import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Sorteio;
@@ -39,6 +40,7 @@ public class EditarSorteio {
 	
 	MoradorTarefaCombinacao selecionado = null;
 	private JComboBox<MoradorTarefaCombinacao> cmbEditar;
+	private JButton btnNotify;
 
 	public EditarSorteio(Sorteio sorteio) {
 		this.sorteio = sorteio;
@@ -180,6 +182,20 @@ public class EditarSorteio {
 		springLayout.putConstraint(SpringLayout.SOUTH, cmbEditar, -6, SpringLayout.NORTH, chckFeita);
 		springLayout.putConstraint(SpringLayout.EAST, cmbEditar, 0, SpringLayout.EAST, scrollPane);
 		frame.getContentPane().add(cmbEditar);
+		
+		btnNotify = new JButton("Notificar novamente");
+		btnNotify.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MailSender.alertarMoradores(sorteio);
+			}
+		});
+		springLayout.putConstraint(SpringLayout.WEST, btnNotify, 6, SpringLayout.EAST, chckFeita);
+		springLayout.putConstraint(SpringLayout.SOUTH, btnNotify, -6, SpringLayout.NORTH, btnCancelar);
+		btnNotify.setForeground(Color.WHITE);
+		btnNotify.setFont(new Font("Noto Sans", Font.PLAIN, 16));
+		btnNotify.setContentAreaFilled(false);
+		btnNotify.setBorder(new LineBorder(Color.WHITE, 2));
+		frame.getContentPane().add(btnNotify);
 		frame.setBounds(100, 100, 640, 480);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		for(MoradorTarefaCombinacao mtc:sorteio.getAssociacoes()) {

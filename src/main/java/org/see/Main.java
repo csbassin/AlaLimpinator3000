@@ -24,7 +24,6 @@ public class Main {
     private static void teste(){
         try{
         	SenhaService senhaService = new SenhaService();
-
         	String senha = senhaService.read();
     		if(senha == null){
     			senha = JOptionPane.showInputDialog("Qual a senha do e-mail?");
