@@ -35,7 +35,8 @@ public class Main {
     			}
     		}
     		StaticConfigObjects.password = senha;
-            MailSender.sendTeste();
+            MailSender sender = new MailSender();
+            sender.start();
 
         }catch(Exception e) {
             e.printStackTrace();

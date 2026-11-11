@@ -21,10 +21,39 @@ import org.see.config.StaticConfigObjects;
 import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Sorteio;
 
-public class MailSender {
+public class MailSender extends Thread{
 		
+	private Sorteio sorteio = null;
+	private List<MoradorTarefaCombinacao> mtc = null;
+	private LocalDate data = null;
 	
-	public static void alertarMoradores(Sorteio sorteio) {
+	public MailSender() {
+		
+	}
+	
+	public MailSender(List<MoradorTarefaCombinacao> arg, LocalDate data) {
+		this.mtc = arg;
+		this.data = data;
+	}
+	public MailSender(Sorteio sorteio) {
+		this.sorteio = sorteio;
+	}
+	
+	@Override
+	public void run() {
+		if(sorteio != null) {
+			System.out.println("Estou alertando");
+			alertarMoradores(sorteio);
+		}else if(this.mtc!=null && this.data!=null){
+			System.out.println("Estou dedurando");
+			dedurarMoradores(mtc, data);
+		}else {
+			System.out.println("Estou testando");
+			sendTeste();
+		}
+	}
+	
+	public void alertarMoradores(Sorteio sorteio) {
 		String subject = "Tarefas da semana sorteadas - "+Miscelaneous.formatDate(sorteio.getDataHoraSorteio().toLocalDate()); 
 		String body = "Olá, ";
 		List<MoradorTarefaCombinacao> mtces = sorteio.getAssociacoes();
@@ -44,14 +73,22 @@ public class MailSender {
 			}
 		}
 	}
-	public static void dedurarMorador() {
-		
+	public void dedurarMoradores(List<MoradorTarefaCombinacao> mtcs, LocalDate data) {
+		String subject = "Moradores que não cumpriram as tarefas - "+Miscelaneous.formatDate(data);
+		String body = "Olá, Viviane.\nOs seguintes moradores não cumpriram as seguintes tarefas até a data-limite:\n";
+		for(MoradorTarefaCombinacao mtc:mtcs) {
+			if(!mtc.isFeita()) {
+				body+="    ->"+mtc.getMorador().getNome()+", "+mtc.getMorador().getEmail()+". Tarefa: "+mtc.getTarefa().getNome()+" - "+mtc.getTarefa().getDescricao()+";\n";
+			}
+		}
+		body+="\nAtenciosamente,\nMoradores do Apartamento 4.";
+		envioEmail(subject, body, StaticConfigObjects.EMAIL_DESTINO);
 	}
-	public static void sendTeste() {
+	public void sendTeste() {
 		envioEmail("Teste", "Email de teste", "cauabassin@outlook.com");
 	}
 	
-	public static void envioEmail(String assunto, String corpo, String destinatario) {
+	public void envioEmail(String assunto, String corpo, String destinatario) {
 		SmtpAuthenticator pass =  new SmtpAuthenticator();
 		Properties props = new Properties();
 		
@@ -59,12 +96,13 @@ public class MailSender {
 		props.put("mail.smtp.port", StaticConfigObjects.PORTA_SERVIDOR_EMAIL);
 		props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-		//props.put("mail.debug", "true");
+        props.put("mail.smtp.connectiontimeout", 30000);
+        props.put("mail.smtp.timeout", 30000);
         
 		Session session = Session.getInstance(props);
 		
 		try {
-			System.out.println(StaticConfigObjects.password);
+			//System.out.println(StaticConfigObjects.password);
 			Message mensagem = new MimeMessage(Session.getDefaultInstance(props, pass));
 			mensagem.setFrom(new InternetAddress(StaticConfigObjects.EMAIL));
 			mensagem.setRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
@@ -72,6 +110,7 @@ public class MailSender {
 			mensagem.setSentDate(Date.from(Instant.now()));
 			mensagem.setText(corpo);
 			Transport transport = session.getTransport("smtp");
+			
             transport.connect(StaticConfigObjects.SMTP_MAIL_SERVER , StaticConfigObjects.PORTA_SERVIDOR_EMAIL , StaticConfigObjects.EMAIL, StaticConfigObjects.password);
 			Transport.send(mensagem);
 			System.out.println("Email enviado para "+destinatario);

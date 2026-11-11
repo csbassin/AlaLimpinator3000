@@ -4,6 +4,7 @@ import jdk.jshell.spi.ExecutionControl;
 import org.see.Miscelaneous;
 import org.see.config.FakeFileLengths;
 import org.see.exception.*;
+import org.see.mail.MailSender;
 import org.see.modelo.Morador;
 import org.see.modelo.MoradorTarefaCombinacao;
 import org.see.modelo.Sorteio;
@@ -38,6 +39,8 @@ public class SorteioService extends Service<Sorteio> {
             mtc.setSorteio(sorteio.getNumero());
         }
         mtcs.cadastrarTodos(sorteio.getAssociacoes());
+        //MailSender.alertarMoradores(sorteio);
+        (new MailSender(sorteio)).start();
     }
 
     @Override

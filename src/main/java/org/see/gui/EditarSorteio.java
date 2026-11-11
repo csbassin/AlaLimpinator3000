@@ -186,7 +186,8 @@ public class EditarSorteio {
 		btnNotify = new JButton("Notificar novamente");
 		btnNotify.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MailSender.alertarMoradores(sorteio);
+				//MailSender.alertarMoradores(sorteio);
+				(new MailSender(sorteio)).start();
 			}
 		});
 		springLayout.putConstraint(SpringLayout.WEST, btnNotify, 6, SpringLayout.EAST, chckFeita);

@@ -1,7 +1,12 @@
 package org.see.gui;
 
 import org.see.config.StaticConfigObjects;
+import org.see.mail.MailSender;
+import org.see.modelo.MoradorTarefaCombinacao;
+import org.see.modelo.Sorteio;
+import org.see.service.MoradorTarefaCombinacaoService;
 import org.see.service.SenhaService;
+import org.see.service.SorteioService;
 
 import java.awt.EventQueue;
 import javax.swing.*;
@@ -12,6 +17,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainWindow {
 
@@ -21,7 +29,8 @@ public class MainWindow {
 	private JButton btnEditarMorador;
 	private SenhaService senhaService;
 	private JButton btnMostrarSorteios;
-
+	private SorteioService ss;
+	private MoradorTarefaCombinacaoService mtcss;
 	public static void main(String[] args) {
 		try {
 			javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
@@ -47,7 +56,9 @@ public class MainWindow {
 
 	private void initialize() {
 		try{
+			ss = new SorteioService();
 			senhaService = new SenhaService();
+			mtcss = new MoradorTarefaCombinacaoService();
 		}catch(Exception e){
 			e.printStackTrace();
 			return;
@@ -63,6 +74,31 @@ public class MainWindow {
 			}
 		}
 		StaticConfigObjects.password = senha;
+		try {
+			Sorteio s = ss.readLast();
+			LocalDate dataHoje = LocalDate.now();
+			if(dataHoje.isAfter(s.getDataLimite())) {
+				List<MoradorTarefaCombinacao> dedurados = new ArrayList<>();
+				for(MoradorTarefaCombinacao mtc: s.getAssociacoes()) {
+					if(!mtc.isFeita()) { //se tá depois da data limite e não foi feita
+						String texto = "Deseja dedurar "+mtc.getMorador().getNome()+" por não ter feito "+mtc.getTarefa().getNome()+"? \"Cancelar\" fará com que a tarefa seja marcada como concluída.";
+						int resposta = JOptionPane.showConfirmDialog(null, texto, "Tarefa não feita", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+						if(resposta == JOptionPane.OK_OPTION) {
+							dedurados.add(mtc);
+						}else {
+							mtc.setFeita(true);
+							mtcss.update(mtc);
+						}
+					}	
+				}
+				if(!dedurados.isEmpty()) {
+					//MailSender.dedurarMoradores(dedurados, s.getDataLimite());
+					(new MailSender(dedurados, s.getDataLimite())).start();
+				}
+			}
+		}catch(Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+		}
 
 		frame = new JFrame();
 		frame.addWindowListener(new WindowAdapter() {
